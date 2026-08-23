@@ -1,6 +1,9 @@
 #include "miniRT_bonus.h"
 #include <stdlib.h>
 
+void	accel_open(t_scene *s);
+void	accel_close(t_scene *s);
+
 static t_object	*obj_new(t_scene *s, t_obj_type type, t_material m)
 {
 	t_object	*o;
@@ -179,28 +182,70 @@ static void	add_tri(t_scene *s, t_vec3 a, t_vec3 b, t_vec3 c, t_material m)
 				vec3_sub(c, a)));
 }
 
+static void	lathe(t_scene *s, t_vec3 base, const double (*prof)[2],
+		int np, int nseg, t_material m)
+{
+	int		i;
+	int		k;
+	double	a0;
+	double	a1;
+	t_vec3	q[4];
+
+	i = -1;
+	while (++i < np - 1)
+	{
+		k = -1;
+		while (++k < nseg)
+		{
+			a0 = 6.28318530718 * k / nseg;
+			a1 = 6.28318530718 * (k + 1) / nseg;
+			q[0] = vec3(base.x + prof[i][0] * __builtin_cos(a0),
+					base.y + prof[i][1], base.z + prof[i][0] * __builtin_sin(a0));
+			q[1] = vec3(base.x + prof[i][0] * __builtin_cos(a1),
+					base.y + prof[i][1], base.z + prof[i][0] * __builtin_sin(a1));
+			q[2] = vec3(base.x + prof[i + 1][0] * __builtin_cos(a0),
+					base.y + prof[i + 1][1],
+					base.z + prof[i + 1][0] * __builtin_sin(a0));
+			q[3] = vec3(base.x + prof[i + 1][0] * __builtin_cos(a1),
+					base.y + prof[i + 1][1],
+					base.z + prof[i + 1][0] * __builtin_sin(a1));
+			if (prof[i][0] > 0.001)
+				add_tri(s, q[0], q[1], q[3], m);
+			if (prof[i + 1][0] > 0.001)
+				add_tri(s, q[0], q[3], q[2], m);
+		}
+	}
+}
+
 static void	rabbit(t_scene *s, t_vec3 p)
 {
 	t_material	fur;
 
+	static const double	rb[6][2] = {{0.02, 0.0}, {0.55, 0.10}, {0.62, 0.50},
+	{0.45, 1.00}, {0.32, 1.30}, {0.02, 1.52}};
+
 	fur = shiny(mat(0.94, 0.92, 0.90), 0.3, 24);
-	add_sphere(s, vec3(p.x, p.y + 0.75, p.z), 0.75, fur);
+	accel_open(s);
+	lathe(s, p, rb, 6, 8, fur);
 	add_sphere(s, vec3(p.x, p.y + 1.78, p.z - 0.18), 0.48, fur);
 	add_cone(s, vec3(p.x - 0.20, p.y + 3.05, p.z - 0.20), vec3(0, -1, 0),
 		0.15, 0.95, shiny(mat(0.95, 0.75, 0.80), 0.3, 24));
 	add_cone(s, vec3(p.x + 0.22, p.y + 3.00, p.z - 0.16), vec3(0, -1, 0),
 		0.15, 0.90, shiny(mat(0.95, 0.75, 0.80), 0.3, 24));
 	add_sphere(s, vec3(p.x, p.y + 0.55, p.z + 0.78), 0.24, fur);
+	accel_close(s);
 }
 
 static void	snail(t_scene *s, t_vec3 p)
 {
+	accel_open(s);
 	add_sphere(s, vec3(p.x, p.y + 0.60, p.z), 0.60,
 		checked(shiny(mat(0.66, 0.34, 0.14), 0.5, 48), 0.3));
 	add_sphere(s, vec3(p.x + 0.62, p.y + 0.26, p.z + 0.18), 0.26,
 		mat(0.85, 0.70, 0.52));
 	add_sphere(s, vec3(p.x + 0.88, p.y + 0.50, p.z + 0.26), 0.20,
 		mat(0.85, 0.70, 0.52));
+	accel_close(s);
 }
 
 static void	butterfly(t_scene *s, t_vec3 p, t_color wl, t_color wr)
@@ -216,12 +261,26 @@ static void	butterfly(t_scene *s, t_vec3 p, t_color wl, t_color wr)
 		shiny(default_material(wr), 0.5, 48));
 }
 
+static void	cheshire_tail(t_scene *s, t_vec3 p, t_material coat)
+{
+	add_sphere(s, vec3(p.x + 0.72, p.y - 0.75, p.z + 0.35), 0.15, coat);
+	add_sphere(s, vec3(p.x + 0.98, p.y - 0.58, p.z + 0.42), 0.13, coat);
+	add_sphere(s, vec3(p.x + 1.16, p.y - 0.34, p.z + 0.44), 0.12, coat);
+	add_sphere(s, vec3(p.x + 1.24, p.y - 0.08, p.z + 0.42), 0.11, coat);
+	add_sphere(s, vec3(p.x + 1.22, p.y + 0.16, p.z + 0.38), 0.10,
+		shiny(mat(0.98, 0.97, 0.90), 0.5, 48));
+}
+
 static void	cheshire(t_scene *s, t_vec3 p)
 {
-	t_material	coat;
+	t_material			coat;
+	static const double	cb[7][2] = {{0.02, -0.95}, {0.72, -0.85}, {0.80, -0.5},
+	{0.60, 0.1}, {0.44, 0.55}, {0.50, 0.80}, {0.02, 0.98}};
 
 	coat = checked(shiny(mat(0.90, 0.20, 0.55), 0.5, 48), 0.45);
-	add_sphere(s, p, 0.95, coat);
+	accel_open(s);
+	lathe(s, p, cb, 7, 8, coat);
+	cheshire_tail(s, p, coat);
 	add_sphere(s, vec3(p.x, p.y + 1.15, p.z - 0.25), 0.60, coat);
 	add_cone(s, vec3(p.x - 0.32, p.y + 2.15, p.z - 0.25), vec3(0, -1, 0),
 		0.17, 0.55, mat(0.90, 0.20, 0.55));
@@ -233,17 +292,27 @@ static void	cheshire(t_scene *s, t_vec3 p)
 		shiny(mat(0.98, 0.85, 0.20), 0.8, 96));
 	add_sphere(s, vec3(p.x + 0.21, p.y + 1.32, p.z - 0.76), 0.09,
 		shiny(mat(0.98, 0.85, 0.20), 0.8, 96));
+	accel_close(s);
 }
 
 static void	queen(t_scene *s, t_vec3 p)
 {
-	add_cone(s, vec3(p.x, p.y + 2.3, p.z), vec3(0, -1, 0), 1.15, 2.3,
-		shiny(mat(0.80, 0.08, 0.18), 0.4, 32));
-	add_sphere(s, vec3(p.x, p.y + 2.6, p.z), 0.50,
-		shiny(mat(0.62, 0.06, 0.20), 0.4, 32));
-	add_sphere(s, vec3(p.x, p.y + 3.35, p.z), 0.34, mat(0.95, 0.85, 0.75));
-	add_cone(s, vec3(p.x, p.y + 4.25, p.z), vec3(0, -1, 0), 0.32, 0.55,
-		shiny(mat(0.95, 0.80, 0.20), 0.9, 128));
+	static const double	qp[9][2] = {{1.00, 0.0}, {0.95, 0.16}, {0.50, 0.45},
+	{0.36, 1.05}, {0.30, 1.70}, {0.46, 2.05}, {0.26, 2.20}, {0.58, 2.50},
+	{0.02, 2.72}};
+	t_material			robe;
+	int					k;
+
+	robe = shiny(mat(0.80, 0.08, 0.18), 0.45, 40);
+	accel_open(s);
+	lathe(s, p, qp, 9, 8, robe);
+	add_sphere(s, vec3(p.x, p.y + 3.02, p.z), 0.34, mat(0.95, 0.85, 0.75));
+	k = -1;
+	while (++k < 4)
+		add_cone(s, vec3(p.x + 0.20 * __builtin_cos(k * 1.5708),
+				p.y + 3.75, p.z + 0.20 * __builtin_sin(k * 1.5708)),
+			vec3(0, -1, 0), 0.08, 0.42, shiny(mat(0.95, 0.80, 0.20), 0.9, 128));
+	accel_close(s);
 }
 
 static void	card(t_scene *s, double x, double z, double lean, int mark)
@@ -256,21 +325,37 @@ static void	card(t_scene *s, double x, double z, double lean, int mark)
 	add_tri(s, vec3(x - 0.55, 0, z), vec3(x + 0.55, 1.7, z + lean),
 		vec3(x - 0.55, 1.7, z + lean - 0.05), face);
 	if (mark)
-		add_sphere(s, vec3(x, 0.9, z + lean * 0.5 - 0.10), 0.15,
-			shiny(mat(0.85, 0.08, 0.15), 0.5, 48));
+	{
+		t_material	red;
+		double		zf;
+
+		red = shiny(mat(0.85, 0.08, 0.15), 0.5, 48);
+		zf = z + lean * 0.53 + 0.03;
+		add_tri(s, vec3(x, 0.72, zf), vec3(x - 0.26, 1.06, zf),
+			vec3(x + 0.26, 1.06, zf), red);
+		add_tri(s, vec3(x - 0.26, 1.00, zf), vec3(x - 0.13, 1.22, zf),
+			vec3(x, 1.04, zf), red);
+		add_tri(s, vec3(x + 0.26, 1.00, zf), vec3(x, 1.04, zf),
+			vec3(x + 0.13, 1.22, zf), red);
+	}
 }
 
 static void	dodo(t_scene *s, t_vec3 p)
 {
-	add_sphere(s, vec3(p.x, p.y + 0.85, p.z), 0.70, mat(0.62, 0.55, 0.45));
-	add_sphere(s, vec3(p.x + 0.55, p.y + 1.75, p.z), 0.35,
+	static const double	db[7][2] = {{0.02, 0.30}, {0.50, 0.40}, {0.72, 0.85},
+	{0.66, 1.25}, {0.42, 1.55}, {0.26, 1.75}, {0.02, 1.95}};
+
+	accel_open(s);
+	lathe(s, p, db, 7, 8, mat(0.62, 0.55, 0.45));
+	add_sphere(s, vec3(p.x + 0.45, p.y + 1.90, p.z), 0.33,
 		mat(0.68, 0.60, 0.50));
-	add_cone(s, vec3(p.x + 1.50, p.y + 1.68, p.z), vec3(-1, 0.05, 0),
+	add_cone(s, vec3(p.x + 1.40, p.y + 1.84, p.z), vec3(-1, 0.05, 0),
 		0.16, 0.62, shiny(mat(0.90, 0.60, 0.20), 0.5, 48));
 	add_cyl(s, vec3(p.x - 0.22, p.y, p.z + 0.12), 0.06, 0.45,
 		mat(0.90, 0.60, 0.20));
 	add_cyl(s, vec3(p.x + 0.20, p.y, p.z - 0.10), 0.06, 0.45,
 		mat(0.90, 0.60, 0.20));
+	accel_close(s);
 }
 
 static void	birds(t_scene *s)
@@ -304,8 +389,69 @@ static void	creatures(t_scene *s)
 	birds(s);
 }
 
+static void	teapot(t_scene *s, t_vec3 p)
+{
+	static const double	tp[8][2] = {{0.30, 0.0}, {0.62, 0.08}, {0.88, 0.42},
+	{0.80, 0.82}, {0.50, 1.02}, {0.40, 1.08}, {0.16, 1.20}, {0.02, 1.28}};
+	t_material			china;
+
+	china = checked(shiny(mat(0.30, 0.55, 0.90), 0.6, 64), 0.35);
+	accel_open(s);
+	lathe(s, p, tp, 8, 8, china);
+	add_cone(s, vec3(p.x + 1.35, p.y + 0.95, p.z), vec3(-0.85, -0.45, 0),
+		0.20, 0.80, shiny(mat(0.30, 0.55, 0.90), 0.6, 64));
+	add_sphere(s, vec3(p.x - 0.98, p.y + 0.72, p.z), 0.10,
+		mat(0.30, 0.55, 0.90));
+	add_sphere(s, vec3(p.x - 1.08, p.y + 0.52, p.z), 0.10,
+		mat(0.30, 0.55, 0.90));
+	add_sphere(s, vec3(p.x - 0.98, p.y + 0.32, p.z), 0.10,
+		mat(0.30, 0.55, 0.90));
+	accel_close(s);
+}
+
+static void	teacup(t_scene *s, t_vec3 p)
+{
+	static const double	cp[5][2] = {{0.02, 0.02}, {0.26, 0.04}, {0.30, 0.12},
+	{0.40, 0.42}, {0.44, 0.52}};
+
+	accel_open(s);
+	add_cyl(s, vec3(p.x, p.y, p.z), 0.55, 0.04,
+		shiny(mat(0.95, 0.60, 0.75), 0.5, 48));
+	lathe(s, p, cp, 5, 8, shiny(mat(0.95, 0.60, 0.75), 0.5, 48));
+	accel_close(s);
+}
+
+static void	tea_party(t_scene *s)
+{
+	add_cyl(s, vec3(-2.5, 0, -20), 0.38, 1.24, mat(0.45, 0.30, 0.20));
+	add_cyl(s, vec3(-2.5, 1.24, -20), 2.3, 0.14,
+		checked(mat(0.85, 0.82, 0.78), 0.8));
+	teapot(s, vec3(-3.1, 1.38, -19.5));
+	teacup(s, vec3(-1.5, 1.38, -20.5));
+	add_cyl(s, vec3(-4.9, 0, -21.2), 0.5, 0.75, mat(0.5, 0.34, 0.22));
+	add_cyl(s, vec3(-0.2, 0, -18.6), 0.5, 0.75, mat(0.5, 0.34, 0.22));
+	accel_open(s);
+	add_cyl(s, vec3(-2.0, 1.38, -21.3), 1.00, 0.07,
+		shiny(mat(0.30, 0.12, 0.45), 0.4, 32));
+	add_cyl(s, vec3(-2.0, 1.45, -21.3), 0.60, 1.05,
+		checked(shiny(mat(0.30, 0.12, 0.45), 0.4, 32), 0.4));
+	add_cyl(s, vec3(-2.0, 1.45, -21.3), 0.63, 0.22,
+		shiny(mat(0.95, 0.80, 0.20), 0.6, 64));
+	accel_close(s);
+}
+
 static void	surroundings(t_scene *s)
 {
+	tea_party(s);
+	mushroom(s, vec3(8.5, 0, -19), 3.0, 1.50, checked(mat(0.65, 0.90, 0.25),
+			0.5));
+	mushroom(s, vec3(-11, 0, -17.5), 2.0, 1.20, mat(0.95, 0.55, 0.15));
+	add_cone(s, vec3(12, 12, -24), vec3(0, -1, 0), 4.0, 12,
+		mat(0.12, 0.08, 0.26));
+	add_cone(s, vec3(-4, 10, -27), vec3(0, -1, 0), 3.4, 10,
+		mat(0.10, 0.07, 0.22));
+	add_sphere(s, vec3(0.5, 6.0, -18), 0.70,
+		shiny(mat(0.55, 0.95, 0.80), 0.8, 128));
 	mushroom(s, vec3(-5.2, 0, -16), 1.8, 1.10, mat(0.72, 0.90, 0.20));
 	mushroom(s, vec3(6.5, 0, -13.5), 2.6, 1.40,
 		checked(mat(0.20, 0.85, 0.75), 0.5));
