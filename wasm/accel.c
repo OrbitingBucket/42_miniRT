@@ -1,7 +1,7 @@
 #include "miniRT_bonus.h"
 
-#define MAX_OBJ 1200
-#define MAX_GRP 40
+#define MAX_OBJ 5000
+#define MAX_GRP 64
 
 typedef struct s_bound
 {
@@ -25,7 +25,7 @@ static t_bound	g_b[MAX_OBJ];
 static int		g_nb;
 static t_grp	g_g[MAX_GRP];
 static int		g_ng;
-static t_bound	g_loose[MAX_OBJ];
+static t_bound	g_loose[256];
 static int		g_nl;
 static t_object	*g_open_head;
 
@@ -115,25 +115,15 @@ static void	group_bound(t_grp *g)
 	g->r2 = r * r * 1.02;
 }
 
-static int	in_group(t_object *o, int *gi)
+static int	group_starting_at(t_object *o)
 {
 	int	k;
 
 	k = -1;
 	while (++k < g_ng)
-	{
-		t_object	*p = g_g[k].head;
-		while (p && p != g_g[k].end)
-		{
-			if (p == o)
-			{
-				*gi = k;
-				return (1);
-			}
-			p = p->next;
-		}
-	}
-	return (0);
+		if (g_g[k].head == o)
+			return (k);
+	return (-1);
 }
 
 void	build_accel(t_scene *s)
@@ -159,10 +149,15 @@ void	build_accel(t_scene *s)
 		group_bound(&g_g[k]);
 	}
 	o = s->objects;
-	while (o && g_nl < MAX_OBJ)
+	while (o && g_nl < 256)
 	{
-		if (!in_group(o, &gi))
-			bound_one(o, &g_loose[g_nl++]);
+		gi = group_starting_at(o);
+		if (gi >= 0)
+		{
+			o = g_g[gi].end;
+			continue ;
+		}
+		bound_one(o, &g_loose[g_nl++]);
 		o = o->next;
 	}
 }

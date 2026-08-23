@@ -17,7 +17,7 @@ onmessage = function (e) {
 		importScripts(d.init);
 		createMiniRT().then(function (m) {
 			mod = m;
-			ptr = m._rt_init();
+			ptr = m._rt_init(d.scene || 0);
 			postMessage({ ready: 1 });
 			var q = queue;
 			queue = [];

@@ -5,7 +5,8 @@
 		|| (navigator.maxTouchPoints > 0 && !window.matchMedia('(pointer: fine)').matches);
 	var W = touchMode ? 1280 : 1920;
 	var H = touchMode ? 720 : 1080;
-	var MOD = (touchMode ? 'minirt720.js' : 'minirt.js') + '?v=10';
+	var MOD = (touchMode ? 'minirt720.js' : 'minirt.js') + '?v=11';
+	var SCENE = params.get('scene') === 'wonderland' ? 1 : 0;
 	var canvas = document.getElementById('rt');
 	var overlay = document.getElementById('overlay');
 	var stick = document.getElementById('stick');
@@ -15,6 +16,7 @@
 	var ctx;
 	var img;
 	var cam = { x: 0, y: 1.8, z: -13.5, yaw: 0, pitch: 0.03, fov: 72 };
+	var SPEED = 7.0;
 	var keys = {};
 	var axX = 0;
 	var axY = 0;
@@ -41,6 +43,10 @@
 	var pinchDist0 = 0;
 	var pinchFov0 = 72;
 
+	if (SCENE === 0) {
+		cam = { x: 0, y: 4.6, z: -9.8, yaw: 0, pitch: -0.35, fov: 58 };
+		SPEED = 4.0;
+	}
 	canvas.width = W;
 	canvas.height = H;
 	ctx = canvas.getContext('2d');
@@ -70,7 +76,7 @@
 		var fl = Math.hypot(d[0], d[2]) || 1;
 		var f = [d[0] / fl, 0, d[2] / fl];
 		var r = [-f[2], 0, f[0]];
-		var s = 7.0 * dt;
+		var s = SPEED * dt;
 		var mx = axX;
 		var my = axY;
 		var fy = flyAx;
@@ -150,7 +156,7 @@
 				if (o && o.f === pass.frame && now - o.t > 12000) {
 					try { workers[i].terminate(); } catch (err) {}
 					spawn(i);
-					workers[i].postMessage({ init: MOD });
+					workers[i].postMessage({ init: MOD, scene: SCENE });
 					outstanding[i] = { y0: o.y0, y1: o.y1, t: now, f: pass.frame };
 					workers[i].postMessage({ frame: pass.frame, w: W,
 						y0: o.y0, y1: o.y1, q: pass.q, cam: pass.cam });
@@ -206,19 +212,19 @@
 	}
 
 	function spawn(i) {
-		var w = new Worker('worker.js?v=10');
+		var w = new Worker('worker.js?v=11');
 		w.onmessage = onBand;
 		w.onerror = function () {
 			try { w.terminate(); } catch (err) {}
 			spawn(i);
-			workers[i].postMessage({ init: MOD });
+			workers[i].postMessage({ init: MOD, scene: SCENE });
 		};
 		workers[i] = w;
 	}
 
 	for (var i = 0; i < bands.length; i++) {
 		spawn(i);
-		workers[i].postMessage({ init: MOD });
+		workers[i].postMessage({ init: MOD, scene: SCENE });
 	}
 
 	function stickHome() {

@@ -8,6 +8,7 @@
 #endif
 
 void	build_wonderland(t_scene *s);
+void	build_chess(t_scene *s);
 void	build_accel(t_scene *s);
 
 static t_app	g_app;
@@ -34,9 +35,12 @@ void	mlx_put_pixel(t_mlx *mlx, int x, int y, t_color color)
 	dst[3] = 255;
 }
 
-EMSCRIPTEN_KEEPALIVE unsigned char	*rt_init(void)
+EMSCRIPTEN_KEEPALIVE unsigned char	*rt_init(int scene)
 {
-	build_wonderland(&g_app.scene);
+	if (scene == 1)
+		build_wonderland(&g_app.scene);
+	else
+		build_chess(&g_app.scene);
 	build_accel(&g_app.scene);
 	g_app.mlx.bpp = 32;
 	g_app.mlx.line_len = WIDTH * 4;

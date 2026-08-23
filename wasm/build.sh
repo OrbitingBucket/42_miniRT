@@ -16,7 +16,7 @@ srcs/intersect/cone_utils_bonus.c srcs/intersect/triangle_bonus.c \
 srcs/shading/color.c srcs/shading/diffuse.c srcs/shading/ambient.c \
 srcs/shading/shadow.c srcs/shading/attenuation.c srcs/shading/shade_bonus.c \
 srcs/shading/specular_bonus.c srcs/shading/checker_bonus.c \
-wasm/scene_wonderland.c wasm/accel.c wasm/wasm_main.c"
+wasm/scene_wonderland.c wasm/scene_chess.c wasm/accel.c wasm/wasm_main.c"
 
 INC="-I includes -I libft -I wasm/stub"
 mkdir -p wasm/out
