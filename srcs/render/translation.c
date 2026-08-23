@@ -37,3 +37,14 @@ void	move_camera(int key, t_camera *cam, double speed)
 	else if (key == 97)
 		cam->pos = vec3_sub(cam->pos, vec3_scale(right, speed));
 }
+
+void	handle_move(t_app *app, int keycode)
+{
+	if (keycode != 119 && keycode != 115 && keycode != 100 && keycode != 97)
+		return ;
+	if (app->fast && (app->needs_render || app->row < HEIGHT))
+		return ;
+	move_camera(keycode, &app->scene.camera, MOVE_SPEED);
+	app->fast = 1;
+	app->needs_render = 1;
+}

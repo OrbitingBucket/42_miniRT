@@ -14,9 +14,9 @@
 
 static void	unknown_id(char *token)
 {
-	write(2, "Error\nunknown identifier: ", 26);
-	write(2, token, ft_strlen(token));
-	write(2, "\n", 1);
+	ft_putstr_fd("Error\nunknown identifier: ", 2);
+	ft_putstr_fd(token, 2);
+	ft_putstr_fd("\n", 2);
 	exit(1);
 }
 

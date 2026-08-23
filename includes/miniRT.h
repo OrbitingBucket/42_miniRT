@@ -24,6 +24,9 @@
 # define HEIGHT 600
 # define MAX_DEPTH 8
 # define SHADOW_BIAS 1e-4
+# define SLICE_ROWS 32
+# define MOVE_SPEED 1.0
+# define EDGE_SPREAD 0.1
 
 # ifdef __linux__
 #  define KEY_ESC 65307
@@ -191,6 +194,8 @@ typedef struct s_mlx
 	void			*win;
 	void			*img;
 	char			*addr;
+	void			*back;
+	char			*back_addr;
 	int				bpp;
 	int				line_len;
 	int				endian;
@@ -201,6 +206,10 @@ typedef struct s_app
 	t_mlx			mlx;
 	t_scene			scene;
 	int				is_locked;
+	int				needs_render;
+	int				fast;
+	int				row;
+	t_color			*half;
 }					t_app;
 
 typedef struct s_camera_basis
@@ -270,16 +279,20 @@ void				free_scene(t_scene *scene);
 
 void				mlx_setup(t_app *app);
 void				mlx_put_pixel(t_mlx *mlx, int x, int y, t_color color);
+void				present_frame(t_app *app);
+void				upsample_frame(t_app *app);
 int					mouse_hook(int button, int x, int y, void *param);
 int					key_handler(int keycode, void *param);
 int					close_handler(t_app *app);
 int					expose_handler(t_app *app);
+int					loop_hook(t_app *app);
 
 void				move_camera(int key, t_camera *cam, double speed);
+void				handle_move(t_app *app, int keycode);
 t_camera_basis		build_camera_basis(t_camera *cam);
 t_ray				get_ray(t_camera_basis *basis, double u, double v);
 t_color				ray_color(t_ray ray, t_scene *scene, int depth);
-void				render(t_app *app);
+void				render_span(t_app *app, int y_start, int y_end);
 
 int					intersect_scene(t_ray ray, t_scene *scene, t_hit *hit);
 int					intersect_sphere(t_ray ray, t_object *obj, t_hit *hit);

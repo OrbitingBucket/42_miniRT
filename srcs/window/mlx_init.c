@@ -25,5 +25,17 @@ void	mlx_setup(t_app *app)
 		error_exit("mlx_new_image failed");
 	app->mlx.addr = mlx_get_data_addr(app->mlx.img, &app->mlx.bpp,
 			&app->mlx.line_len, &app->mlx.endian);
+	app->mlx.back = mlx_new_image(app->mlx.ptr, WIDTH, HEIGHT);
+	if (!app->mlx.back)
+		error_exit("mlx_new_image failed");
+	app->mlx.back_addr = mlx_get_data_addr(app->mlx.back, &app->mlx.bpp,
+			&app->mlx.line_len, &app->mlx.endian);
+	ft_bzero(app->mlx.addr, (size_t)HEIGHT * app->mlx.line_len);
+	app->half = malloc(sizeof(t_color) * (WIDTH / 2) * (HEIGHT / 2));
+	if (!app->half)
+		error_exit("malloc failed");
 	app->is_locked = 1;
+	app->needs_render = 1;
+	app->fast = 1;
+	app->row = HEIGHT;
 }

@@ -51,36 +51,47 @@ static t_color	get_sample_color(t_app *app, t_camera_basis *basis, double px,
 static void	render_pixel(t_app *app, t_camera_basis *basis, int x, int y)
 {
 	t_color	total;
+	int		ss;
 	int		i;
 	int		j;
 
+	ss = 2 - app->fast;
 	total = (t_color){0, 0, 0};
 	i = -1;
-	while (++i < 2)
+	while (++i < ss)
 	{
 		j = -1;
-		while (++j < 2)
+		while (++j < ss)
 		{
 			total = color_add(total, get_sample_color(app, basis, x + (i + 0.5)
-						/ 2.0, y + (j + 0.5) / 2.0));
+						/ ss, y + (j + 0.5) / ss));
 		}
 	}
-	mlx_put_pixel(&app->mlx, x, y, color_scale(total, 0.25));
+	total = color_scale(total, 1.0 / (ss * ss));
+	if (app->fast)
+		app->half[(y / 2) * (WIDTH / 2) + (x / 2)] = total;
+	else
+		mlx_put_pixel(&app->mlx, x, y, total);
 }
 
-void	render(t_app *app)
+void	render_span(t_app *app, int y_start, int y_end)
 {
 	t_camera_basis	basis;
+	int				step;
 	int				x;
 	int				y;
 
 	basis = build_camera_basis(&app->scene.camera);
-	y = -1;
-	while (++y < HEIGHT)
+	step = 1 + app->fast;
+	y = y_start;
+	while (y < y_end && y < HEIGHT)
 	{
-		x = -1;
-		while (++x < WIDTH)
+		x = 0;
+		while (x < WIDTH)
+		{
 			render_pixel(app, &basis, x, y);
+			x += step;
+		}
+		y += step;
 	}
-	mlx_put_image_to_window(app->mlx.ptr, app->mlx.win, app->mlx.img, 0, 0);
 }
