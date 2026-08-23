@@ -8,6 +8,7 @@
 #endif
 
 void	build_wonderland(t_scene *s);
+void	build_accel(t_scene *s);
 
 static t_app	g_app;
 static t_color	*g_coarse;
@@ -36,6 +37,7 @@ void	mlx_put_pixel(t_mlx *mlx, int x, int y, t_color color)
 EMSCRIPTEN_KEEPALIVE unsigned char	*rt_init(void)
 {
 	build_wonderland(&g_app.scene);
+	build_accel(&g_app.scene);
 	g_app.mlx.bpp = 32;
 	g_app.mlx.line_len = WIDTH * 4;
 	g_app.mlx.back_addr = malloc((size_t)WIDTH * HEIGHT * 4);
@@ -64,6 +66,43 @@ EMSCRIPTEN_KEEPALIVE void	rt_set_fov(double fov)
 	if (fov > 120)
 		fov = 120;
 	g_app.scene.camera.fov = fov;
+}
+
+static int	is_edge4(t_color a, t_color b, t_color c, t_color d)
+{
+	double	lo;
+	double	hi;
+	int		k;
+	double	v[4];
+
+	k = 0;
+	while (k < 3)
+	{
+		if (k == 0)
+		{
+			v[0] = a.r; v[1] = b.r; v[2] = c.r; v[3] = d.r;
+		}
+		else if (k == 1)
+		{
+			v[0] = a.g; v[1] = b.g; v[2] = c.g; v[3] = d.g;
+		}
+		else
+		{
+			v[0] = a.b; v[1] = b.b; v[2] = c.b; v[3] = d.b;
+		}
+		lo = v[0];
+		hi = v[0];
+		if (v[1] < lo) lo = v[1];
+		if (v[2] < lo) lo = v[2];
+		if (v[3] < lo) lo = v[3];
+		if (v[1] > hi) hi = v[1];
+		if (v[2] > hi) hi = v[2];
+		if (v[3] > hi) hi = v[3];
+		if (hi - lo > 0.10)
+			return (1);
+		k++;
+	}
+	return (0);
 }
 
 static t_color	lerp_c(t_color a, t_color b, double t)
@@ -125,11 +164,18 @@ static void	render_blocks(int y_start, int y_end, int step)
 			double	gxf = (x + 0.5 + step * 0.5) / step;
 			int		i0 = (int)gxf;
 			double	tx = gxf - i0;
-			t_color	top = lerp_c(g_coarse[j0 * gw + i0],
-					g_coarse[j0 * gw + i0 + 1], tx);
-			t_color	bot = lerp_c(g_coarse[(j0 + 1) * gw + i0],
-					g_coarse[(j0 + 1) * gw + i0 + 1], tx);
-			mlx_put_pixel(&g_app.mlx, x, y, lerp_c(top, bot, ty));
+			t_color	c00 = g_coarse[j0 * gw + i0];
+			t_color	c10 = g_coarse[j0 * gw + i0 + 1];
+			t_color	c01 = g_coarse[(j0 + 1) * gw + i0];
+			t_color	c11 = g_coarse[(j0 + 1) * gw + i0 + 1];
+			if (step == 2 && is_edge4(c00, c10, c01, c11))
+				mlx_put_pixel(&g_app.mlx, x, y, color_clamp(ray_color(
+							get_ray(&basis, (x + 0.5) / (double)WIDTH,
+								1.0 - (y + 0.5) / (double)HEIGHT),
+							&g_app.scene, MAX_DEPTH)));
+			else
+				mlx_put_pixel(&g_app.mlx, x, y,
+					lerp_c(lerp_c(c00, c10, tx), lerp_c(c01, c11, tx), ty));
 			x++;
 		}
 		y++;

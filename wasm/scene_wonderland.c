@@ -53,6 +53,22 @@ static void	add_cyl(t_scene *s, t_vec3 base, double r, double h, t_material m)
 			vec3_scale(o->cylinder.axis, h / 2.0));
 }
 
+static void	add_cyl_axis(t_scene *s, t_vec3 center, t_vec3 axis, double r,
+		double h, t_material m)
+{
+	t_object	*o;
+
+	o = obj_new(s, OBJ_CYLINDER, m);
+	o->cylinder.center = center;
+	o->cylinder.axis = vec3_norm(axis);
+	o->cylinder.radius = r;
+	o->cylinder.height = h;
+	o->cylinder.top_center = vec3_add(center,
+			vec3_scale(o->cylinder.axis, h / 2.0));
+	o->cylinder.bottom_center = vec3_sub(center,
+			vec3_scale(o->cylinder.axis, h / 2.0));
+}
+
 static void	add_cone(t_scene *s, t_vec3 apex, t_vec3 axis, double r,
 		double h, t_material m)
 {
@@ -200,6 +216,73 @@ static void	butterfly(t_scene *s, t_vec3 p, t_color wl, t_color wr)
 		shiny(default_material(wr), 0.5, 48));
 }
 
+static void	cheshire(t_scene *s, t_vec3 p)
+{
+	t_material	coat;
+
+	coat = checked(shiny(mat(0.90, 0.20, 0.55), 0.5, 48), 0.45);
+	add_sphere(s, p, 0.95, coat);
+	add_sphere(s, vec3(p.x, p.y + 1.15, p.z - 0.25), 0.60, coat);
+	add_cone(s, vec3(p.x - 0.32, p.y + 2.15, p.z - 0.25), vec3(0, -1, 0),
+		0.17, 0.55, mat(0.90, 0.20, 0.55));
+	add_cone(s, vec3(p.x + 0.32, p.y + 2.15, p.z - 0.25), vec3(0, -1, 0),
+		0.17, 0.55, mat(0.90, 0.20, 0.55));
+	add_cyl_axis(s, vec3(p.x, p.y + 0.92, p.z - 0.80), vec3(1, 0, 0.12),
+		0.07, 0.72, shiny(mat(0.98, 0.97, 0.90), 0.7, 96));
+	add_sphere(s, vec3(p.x - 0.21, p.y + 1.32, p.z - 0.76), 0.09,
+		shiny(mat(0.98, 0.85, 0.20), 0.8, 96));
+	add_sphere(s, vec3(p.x + 0.21, p.y + 1.32, p.z - 0.76), 0.09,
+		shiny(mat(0.98, 0.85, 0.20), 0.8, 96));
+}
+
+static void	queen(t_scene *s, t_vec3 p)
+{
+	add_cone(s, vec3(p.x, p.y + 2.3, p.z), vec3(0, -1, 0), 1.15, 2.3,
+		shiny(mat(0.80, 0.08, 0.18), 0.4, 32));
+	add_sphere(s, vec3(p.x, p.y + 2.6, p.z), 0.50,
+		shiny(mat(0.62, 0.06, 0.20), 0.4, 32));
+	add_sphere(s, vec3(p.x, p.y + 3.35, p.z), 0.34, mat(0.95, 0.85, 0.75));
+	add_cone(s, vec3(p.x, p.y + 4.25, p.z), vec3(0, -1, 0), 0.32, 0.55,
+		shiny(mat(0.95, 0.80, 0.20), 0.9, 128));
+}
+
+static void	card(t_scene *s, double x, double z, double lean, int mark)
+{
+	t_material	face;
+
+	face = shiny(mat(0.94, 0.94, 0.90), 0.2, 16);
+	add_tri(s, vec3(x - 0.55, 0, z), vec3(x + 0.55, 0, z + 0.05),
+		vec3(x + 0.55, 1.7, z + lean), face);
+	add_tri(s, vec3(x - 0.55, 0, z), vec3(x + 0.55, 1.7, z + lean),
+		vec3(x - 0.55, 1.7, z + lean - 0.05), face);
+	if (mark)
+		add_sphere(s, vec3(x, 0.9, z + lean * 0.5 - 0.10), 0.15,
+			shiny(mat(0.85, 0.08, 0.15), 0.5, 48));
+}
+
+static void	dodo(t_scene *s, t_vec3 p)
+{
+	add_sphere(s, vec3(p.x, p.y + 0.85, p.z), 0.70, mat(0.62, 0.55, 0.45));
+	add_sphere(s, vec3(p.x + 0.55, p.y + 1.75, p.z), 0.35,
+		mat(0.68, 0.60, 0.50));
+	add_cone(s, vec3(p.x + 1.50, p.y + 1.68, p.z), vec3(-1, 0.05, 0),
+		0.16, 0.62, shiny(mat(0.90, 0.60, 0.20), 0.5, 48));
+	add_cyl(s, vec3(p.x - 0.22, p.y, p.z + 0.12), 0.06, 0.45,
+		mat(0.90, 0.60, 0.20));
+	add_cyl(s, vec3(p.x + 0.20, p.y, p.z - 0.10), 0.06, 0.45,
+		mat(0.90, 0.60, 0.20));
+}
+
+static void	birds(t_scene *s)
+{
+	add_tri(s, vec3(-11, 14, 9), vec3(-10.2, 14.5, 9.2),
+		vec3(-10.6, 13.9, 8.6), mat(0.16, 0.13, 0.28));
+	add_tri(s, vec3(-9.2, 15.2, 11), vec3(-8.5, 15.6, 11.2),
+		vec3(-8.9, 15.0, 10.5), mat(0.16, 0.13, 0.28));
+	add_tri(s, vec3(-12.5, 13.2, 12), vec3(-11.8, 13.7, 12.2),
+		vec3(-12.2, 13.1, 11.5), mat(0.16, 0.13, 0.28));
+}
+
 static void	creatures(t_scene *s)
 {
 	rabbit(s, vec3(3.2, 0, -6.2));
@@ -208,6 +291,17 @@ static void	creatures(t_scene *s)
 		(t_color){0.95, 0.30, 0.60}, (t_color){0.98, 0.60, 0.15});
 	butterfly(s, vec3(3.6, 2.8, -4.6),
 		(t_color){0.62, 0.40, 0.95}, (t_color){0.35, 0.90, 0.55});
+	butterfly(s, vec3(0.5, 6.5, -8.0),
+		(t_color){0.95, 0.75, 0.20}, (t_color){0.90, 0.25, 0.25});
+	butterfly(s, vec3(-4.5, 7.2, 1.0),
+		(t_color){0.40, 0.85, 0.95}, (t_color){0.95, 0.45, 0.75});
+	cheshire(s, vec3(-8.5, 5.0, 3.5));
+	queen(s, vec3(7.5, 0, -6.5));
+	card(s, 5.6, -8.6, 0.15, 1);
+	card(s, 4.7, -9.8, -0.10, 0);
+	card(s, 6.4, -10.6, 0.20, 1);
+	dodo(s, vec3(-6.8, 0, -12));
+	birds(s);
 }
 
 static void	surroundings(t_scene *s)

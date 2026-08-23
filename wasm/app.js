@@ -5,7 +5,7 @@
 		|| (navigator.maxTouchPoints > 0 && !window.matchMedia('(pointer: fine)').matches);
 	var W = touchMode ? 1280 : 1920;
 	var H = touchMode ? 720 : 1080;
-	var MOD = (touchMode ? 'minirt720.js' : 'minirt.js') + '?v=8';
+	var MOD = (touchMode ? 'minirt720.js' : 'minirt.js') + '?v=9';
 	var canvas = document.getElementById('rt');
 	var overlay = document.getElementById('overlay');
 	var stick = document.getElementById('stick');
@@ -206,7 +206,7 @@
 	}
 
 	function spawn(i) {
-		var w = new Worker('worker.js?v=8');
+		var w = new Worker('worker.js?v=9');
 		w.onmessage = onBand;
 		w.onerror = function () {
 			try { w.terminate(); } catch (err) {}

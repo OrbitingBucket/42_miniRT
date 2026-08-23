@@ -9,14 +9,14 @@ SRCS="libft/ft_putstr_fd.c libft/ft_strlen.c \
 srcs/math/vec3.c srcs/math/vec3_bis.c srcs/math/vec3_ops.c srcs/math/quad.c \
 srcs/parser/material.c \
 srcs/render/camera.c srcs/render/render.c \
-srcs/intersect/intersect.c srcs/intersect/sphere.c srcs/intersect/plane.c \
+srcs/intersect/sphere.c srcs/intersect/plane.c \
 srcs/intersect/cylinder.c srcs/intersect/cylinder_utils.c \
 srcs/intersect/hit_object_bonus.c srcs/intersect/cone_bonus.c \
 srcs/intersect/cone_utils_bonus.c srcs/intersect/triangle_bonus.c \
 srcs/shading/color.c srcs/shading/diffuse.c srcs/shading/ambient.c \
 srcs/shading/shadow.c srcs/shading/attenuation.c srcs/shading/shade_bonus.c \
 srcs/shading/specular_bonus.c srcs/shading/checker_bonus.c \
-wasm/scene_wonderland.c wasm/wasm_main.c"
+wasm/scene_wonderland.c wasm/accel.c wasm/wasm_main.c"
 
 INC="-I includes -I libft -I wasm/stub"
 mkdir -p wasm/out
