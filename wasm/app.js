@@ -37,6 +37,8 @@
 	var lookLast = { x: 0, y: 0 };
 
 	var n = Math.min(12, Math.max(2, (navigator.hardwareConcurrency || 4) - 1));
+	if (touchMode)
+		n = Math.min(n, 6);
 	var rows = Math.ceil(H / n / 4) * 4;
 	for (var y = 0; y < H; y += rows)
 		bands.push([y, Math.min(y + rows, H)]);
@@ -137,7 +139,7 @@
 	}
 
 	for (var i = 0; i < bands.length; i++) {
-		var w = new Worker('worker.js');
+		var w = new Worker('worker.js?v=4');
 		w.onmessage = onBand;
 		workers.push(w);
 	}
@@ -172,13 +174,18 @@
 	}
 
 	overlay.addEventListener('click', function () {
-		if (!touchMode || !('ontouchstart' in window))
+		if (entered)
+			return;
+		if (touchMode)
+			enterTouch();
+		else
 			enter();
 	});
 	overlay.addEventListener('touchend', function (e) {
-		enter();
 		e.preventDefault();
-	});
+		if (!entered)
+			enterTouch();
+	}, { passive: false });
 	document.addEventListener('pointerlockchange', function () {
 		var locked = !!document.pointerLockElement;
 		if (locked)

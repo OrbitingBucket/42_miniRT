@@ -1,4 +1,4 @@
-importScripts('minirt.js');
+importScripts('minirt.js?v=4');
 
 var mod = null;
 var ptr = 0;
