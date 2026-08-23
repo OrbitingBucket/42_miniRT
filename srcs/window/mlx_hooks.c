@@ -17,24 +17,25 @@ int	mouse_hook(int button, int x, int y, void *param)
 	t_app	*app;
 
 	app = (t_app *)param;
-	(void)x;
-	(void)y;
 	if (app->is_locked)
 		return (0);
+	if (button == 1)
+	{
+		app->drag = 1;
+		app->last_x = x;
+		app->last_y = y;
+		return (0);
+	}
 	if (button == 4)
-	{
 		app->scene.camera.fov -= 5;
-		if (app->scene.camera.fov < 1)
-			app->scene.camera.fov = 1;
-	}
 	else if (button == 5)
-	{
 		app->scene.camera.fov += 5;
-		if (app->scene.camera.fov > 179)
-			app->scene.camera.fov = 179;
-	}
 	else
 		return (0);
+	if (app->scene.camera.fov < 1)
+		app->scene.camera.fov = 1;
+	if (app->scene.camera.fov > 179)
+		app->scene.camera.fov = 179;
 	app->fast = 1;
 	app->needs_render = 1;
 	return (0);

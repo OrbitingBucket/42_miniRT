@@ -26,6 +26,7 @@
 # define SHADOW_BIAS 1e-4
 # define SLICE_ROWS 32
 # define MOVE_SPEED 1.0
+# define ROT_SPEED 0.004
 # define EDGE_SPREAD 0.1
 
 # ifdef __linux__
@@ -209,6 +210,9 @@ typedef struct s_app
 	int				needs_render;
 	int				fast;
 	int				row;
+	int				drag;
+	int				last_x;
+	int				last_y;
 	t_color			*half;
 }					t_app;
 
@@ -239,6 +243,7 @@ t_vec3				vec3_cross(t_vec3 a, t_vec3 b);
 double				vec3_len(t_vec3 v);
 t_vec3				vec3_norm(t_vec3 v);
 t_vec3				vec3_reflect(t_vec3 v, t_vec3 n);
+t_vec3				vec3_rotate(t_vec3 v, t_vec3 axis, double angle);
 int					vec3_near_zero(t_vec3 v);
 t_vec3				ray_at(t_ray ray, double t);
 int					quad_solve(t_quad *q);
@@ -285,10 +290,13 @@ int					mouse_hook(int button, int x, int y, void *param);
 int					key_handler(int keycode, void *param);
 int					close_handler(t_app *app);
 int					expose_handler(t_app *app);
+int					mouse_move(int x, int y, void *param);
+int					mouse_release(int button, int x, int y, void *param);
 int					loop_hook(t_app *app);
 
 void				move_camera(int key, t_camera *cam, double speed);
 void				handle_move(t_app *app, int keycode);
+void				handle_rotate(t_app *app, int dx, int dy);
 t_camera_basis		build_camera_basis(t_camera *cam);
 t_ray				get_ray(t_camera_basis *basis, double u, double v);
 t_color				ray_color(t_ray ray, t_scene *scene, int depth);

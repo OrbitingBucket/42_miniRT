@@ -12,6 +12,17 @@
 
 #include "miniRT.h"
 
+static void	init_state(t_app *app)
+{
+	app->is_locked = 1;
+	app->needs_render = 1;
+	app->fast = 1;
+	app->row = HEIGHT;
+	app->drag = 0;
+	app->last_x = 0;
+	app->last_y = 0;
+}
+
 void	mlx_setup(t_app *app)
 {
 	app->mlx.ptr = mlx_init();
@@ -34,8 +45,5 @@ void	mlx_setup(t_app *app)
 	app->half = malloc(sizeof(t_color) * (WIDTH / 2) * (HEIGHT / 2));
 	if (!app->half)
 		error_exit("malloc failed");
-	app->is_locked = 1;
-	app->needs_render = 1;
-	app->fast = 1;
-	app->row = HEIGHT;
+	init_state(app);
 }

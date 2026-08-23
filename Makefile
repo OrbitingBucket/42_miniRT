@@ -21,6 +21,7 @@ COMMON_SRCS = srcs/main.c \
               srcs/math/vec3.c \
               srcs/math/vec3_bis.c \
               srcs/math/vec3_ops.c \
+              srcs/math/vec3_rot.c \
               srcs/math/quad.c \
               srcs/parser/parse_scene.c \
               srcs/parser/parse_ambient.c \
@@ -35,10 +36,12 @@ COMMON_SRCS = srcs/main.c \
               srcs/window/mlx_init.c \
               srcs/window/mlx_hooks.c \
               srcs/window/mlx_utils.c \
+              srcs/window/mouse_move.c \
               srcs/render/camera.c \
               srcs/render/render.c \
               srcs/render/preview.c \
               srcs/render/translation.c \
+              srcs/render/rotation.c \
               srcs/intersect/intersect.c \
               srcs/intersect/sphere.c \
               srcs/intersect/plane.c \

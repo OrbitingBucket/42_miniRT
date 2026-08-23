@@ -25,6 +25,8 @@ int	main(int argc, char **argv)
 	mlx_hook(app.mlx.win, 17, 0, (int (*)())(void *)close_handler, &app);
 	mlx_hook(app.mlx.win, 12, 1L << 15, (int (*)())(void *)expose_handler,
 		&app);
+	mlx_hook(app.mlx.win, 5, 1L << 3, (int (*)())(void *)mouse_release, &app);
+	mlx_hook(app.mlx.win, 6, 1L << 6, (int (*)())(void *)mouse_move, &app);
 	mlx_loop_hook(app.mlx.ptr, (int (*)())(void *)loop_hook, &app);
 	mlx_loop(app.mlx.ptr);
 	return (0);
