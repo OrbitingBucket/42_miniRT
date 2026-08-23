@@ -13,8 +13,9 @@ co 0,10,10  0,-1,0  6  14  255,100,40   0.7 128.0 0.0
 # sphere beside it
 sp -12,0,10  7  80,140,220  0.6 64.0 0.0
 
-# flat triangle — like a wedge on the floor
-tr  5,-5,4   14,-5,4   9,-5,16   200,180,60  0.3 32.0 0.0
+# flat triangle — like a wedge on the floor (slightly above it,
+# to avoid z-fighting with the coplanar floor plane)
+tr  5,-4.99,4   14,-4.99,4   9,-4.99,16   200,180,60  0.3 32.0 0.0
 
 # vertical triangle — like a fin
 tr  4,-5,8   4,6,12   4,-5,16   180,80,200  0.5 80.0 0.0
