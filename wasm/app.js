@@ -82,8 +82,8 @@
 		if (keys.q) fy -= 1;
 		if (mx === 0 && my === 0 && fy === 0)
 			return;
-		cam.x += (f[0] * my - r[0] * mx) * s;
-		cam.z += (f[2] * my - r[2] * mx) * s;
+		cam.x += (f[0] * my + r[0] * mx) * s;
+		cam.z += (f[2] * my + r[2] * mx) * s;
 		cam.y += fy * s;
 		if (cam.y < 0.4) cam.y = 0.4;
 		if (cam.y > 60) cam.y = 60;
