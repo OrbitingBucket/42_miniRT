@@ -231,7 +231,7 @@ static void	board(t_scene *s)
 	t_material	top;
 	t_material	rim;
 
-	top = cmat(0.16, 0.10, 0.08, 0.15);
+	top = cmat(0.30, 0.18, 0.11, 0.15);
 	top.checkerboard = 1;
 	top.checker_size = 1.0;
 	rim = cmat(0.30, 0.17, 0.10, 0.3);
@@ -269,7 +269,7 @@ void	build_chess(t_scene *s)
 
 	s->objects = NULL;
 	s->lights = NULL;
-	s->ambient = (t_ambient){0.22, (t_color){0.72, 0.76, 1.00}};
+	s->ambient = (t_ambient){0.25, (t_color){0.72, 0.76, 1.00}};
 	s->camera = (t_camera){vec3(0, 4.6, -9.8),
 		vec3_norm(vec3(0, -0.36, 1)), 58};
 	s->has_ambient = 1;
@@ -279,11 +279,11 @@ void	build_chess(t_scene *s)
 	cplane(s, vec3(0, -0.44, 0), vec3(0, 1, 0), cmat(0.15, 0.14, 0.18, 0.1));
 	board(s);
 	ivory = cmat(0.93, 0.89, 0.80, 0.5);
-	onyx = cmat(0.12, 0.11, 0.12, 0.85);
+	onyx = cmat(0.10, 0.10, 0.15, 0.9);
 	onyx.shininess = 140.0;
 	army(s, -3.5, -2.5, ivory, 1.0);
 	army(s, 3.5, 2.5, onyx, -1.0);
 	add_clight(s, vec3(-12, 14, -6), 0.70, (t_color){0.95, 0.90, 0.80});
-	add_clight(s, vec3(14, 11, -5), 0.45, (t_color){0.50, 0.65, 1.00});
+	add_clight(s, vec3(14, 11, -5), 0.62, (t_color){0.55, 0.70, 1.00});
 	add_clight(s, vec3(0, 16, 10), 0.30, (t_color){1.00, 1.00, 1.00});
 }

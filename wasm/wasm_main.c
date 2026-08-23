@@ -102,7 +102,7 @@ static int	is_edge4(t_color a, t_color b, t_color c, t_color d)
 		if (v[1] > hi) hi = v[1];
 		if (v[2] > hi) hi = v[2];
 		if (v[3] > hi) hi = v[3];
-		if (hi - lo > 0.10)
+		if (hi - lo > 0.13)
 			return (1);
 		k++;
 	}

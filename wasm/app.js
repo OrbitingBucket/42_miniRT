@@ -5,7 +5,7 @@
 		|| (navigator.maxTouchPoints > 0 && !window.matchMedia('(pointer: fine)').matches);
 	var W = touchMode ? 1280 : 1920;
 	var H = touchMode ? 720 : 1080;
-	var MOD = (touchMode ? 'minirt720.js' : 'minirt.js') + '?v=11';
+	var MOD = (touchMode ? 'minirt720.js' : 'minirt.js') + '?v=12';
 	var SCENE = params.get('scene') === 'wonderland' ? 1 : 0;
 	var canvas = document.getElementById('rt');
 	var overlay = document.getElementById('overlay');
@@ -24,6 +24,7 @@
 	var dirty = true;
 	var lastQ = 3;
 	var moveQ = 2;
+	var lastDone = 0;
 	var frame = 0;
 	var pass = null;
 	var outstanding = [];
@@ -133,8 +134,13 @@
 	function completePass() {
 		var dur = performance.now() - pass.t0;
 		lastQ = pass.q;
-		if (pass.q === 2 && dur > 300)
-			moveQ = 3;
+		lastDone = performance.now();
+		if (pass.q === moveQ) {
+			if (dur > 300 && moveQ < 3)
+				moveQ++;
+			else if (dur < 120 && moveQ > 1)
+				moveQ--;
+		}
 		pass = null;
 		if (params.has('debug')) {
 			ctx.font = '42px monospace';
@@ -175,7 +181,7 @@
 		} else if (!pass) {
 			if (lastQ >= 2)
 				startPass(1);
-			else if (lastQ === 1)
+			else if (lastQ === 1 && !touchMode && now - lastDone > 1200)
 				startPass(0);
 		}
 		requestAnimationFrame(pump);
@@ -212,7 +218,7 @@
 	}
 
 	function spawn(i) {
-		var w = new Worker('worker.js?v=11');
+		var w = new Worker('worker.js?v=12');
 		w.onmessage = onBand;
 		w.onerror = function () {
 			try { w.terminate(); } catch (err) {}
