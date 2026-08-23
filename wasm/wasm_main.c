@@ -53,6 +53,15 @@ EMSCRIPTEN_KEEPALIVE void	rt_set_cam(double px, double py, double pz,
 	g_app.scene.camera.dir = vec3_norm(vec3(dx, dy, dz));
 }
 
+EMSCRIPTEN_KEEPALIVE void	rt_set_fov(double fov)
+{
+	if (fov < 25)
+		fov = 25;
+	if (fov > 120)
+		fov = 120;
+	g_app.scene.camera.fov = fov;
+}
+
 static void	fill_block(int x0, int y0, int step, t_color c)
 {
 	int	x;

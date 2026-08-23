@@ -31,10 +31,18 @@ fi
 docker run --rm -u "$(id -u):$(id -g)" -v "$(pwd):/src" -w /src emscripten/emsdk \
 	emcc -O2 -DWIDTH=$W -DHEIGHT=$H $INC $SRCS \
 	-sMODULARIZE=1 -sEXPORT_NAME=createMiniRT \
-	-sEXPORTED_FUNCTIONS=_rt_init,_rt_set_cam,_rt_render_band \
+	-sEXPORTED_FUNCTIONS=_rt_init,_rt_set_cam,_rt_set_fov,_rt_render_band \
 	-sEXPORTED_RUNTIME_METHODS=HEAPU8 \
 	-sALLOW_MEMORY_GROWTH=1 -sENVIRONMENT=web,worker,node \
 	-o wasm/out/minirt.js
+
+docker run --rm -u "$(id -u):$(id -g)" -v "$(pwd):/src" -w /src emscripten/emsdk \
+	emcc -O2 -DWIDTH=1280 -DHEIGHT=720 $INC $SRCS \
+	-sMODULARIZE=1 -sEXPORT_NAME=createMiniRT \
+	-sEXPORTED_FUNCTIONS=_rt_init,_rt_set_cam,_rt_set_fov,_rt_render_band \
+	-sEXPORTED_RUNTIME_METHODS=HEAPU8 \
+	-sALLOW_MEMORY_GROWTH=1 -sENVIRONMENT=web,worker,node \
+	-o wasm/out/minirt720.js
 
 docker run --rm -u "$(id -u):$(id -g)" -v "$(pwd)/wasm:/src" -w /src emscripten/emsdk \
 	node verify.js wasm.rgba "$W" "$H"
