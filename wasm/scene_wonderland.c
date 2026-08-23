@@ -122,7 +122,7 @@ static void	caterpillar(t_scene *s, t_vec3 cap_c, double cap_r)
 	t_vec3				p;
 	int					i;
 
-	body = shiny(mat(0.20, 0.85, 0.62), 0.55, 40);
+	body = shiny(mat(0.18, 0.45, 0.92), 0.55, 40);
 	i = -1;
 	while (++i < 5)
 	{
@@ -132,7 +132,7 @@ static void	caterpillar(t_scene *s, t_vec3 cap_c, double cap_r)
 	}
 	p = vec3(cap_c.x - 2.35, 0, cap_c.z - 0.55);
 	p.y = cap_top(cap_c, cap_r, -2.35, -0.55) + 0.62;
-	add_sphere(s, p, 0.85, shiny(mat(0.14, 0.75, 0.58), 0.6, 64));
+	add_sphere(s, p, 0.85, shiny(mat(0.12, 0.35, 0.85), 0.6, 64));
 	add_cone(s, vec3(p.x - 0.26, p.y + 1.55, p.z - 0.14), vec3(0, -1, 0),
 		0.09, 0.82, mat(0.95, 0.35, 0.55));
 	add_cone(s, vec3(p.x + 0.32, p.y + 1.50, p.z + 0.10), vec3(0, -1, 0),
@@ -149,6 +149,77 @@ static void	hookah(t_scene *s, t_vec3 cap_c, double cap_r)
 		shiny(mat(0.88, 0.70, 0.25), 0.85, 96));
 	add_cyl(s, vec3(-0.05, 0, -1.9), 0.07, 2.3,
 		shiny(mat(0.85, 0.68, 0.25), 0.85, 96));
+}
+
+static void	add_tri(t_scene *s, t_vec3 a, t_vec3 b, t_vec3 c, t_material m)
+{
+	t_object	*o;
+
+	o = obj_new(s, OBJ_TRIANGLE, m);
+	o->triangle.v0 = a;
+	o->triangle.v1 = b;
+	o->triangle.v2 = c;
+	o->triangle.normal = vec3_norm(vec3_cross(vec3_sub(b, a),
+				vec3_sub(c, a)));
+}
+
+static void	rabbit(t_scene *s, t_vec3 p)
+{
+	t_material	fur;
+
+	fur = shiny(mat(0.94, 0.92, 0.90), 0.3, 24);
+	add_sphere(s, vec3(p.x, p.y + 0.75, p.z), 0.75, fur);
+	add_sphere(s, vec3(p.x, p.y + 1.78, p.z - 0.18), 0.48, fur);
+	add_cone(s, vec3(p.x - 0.20, p.y + 3.05, p.z - 0.20), vec3(0, -1, 0),
+		0.15, 0.95, shiny(mat(0.95, 0.75, 0.80), 0.3, 24));
+	add_cone(s, vec3(p.x + 0.22, p.y + 3.00, p.z - 0.16), vec3(0, -1, 0),
+		0.15, 0.90, shiny(mat(0.95, 0.75, 0.80), 0.3, 24));
+	add_sphere(s, vec3(p.x, p.y + 0.55, p.z + 0.78), 0.24, fur);
+}
+
+static void	snail(t_scene *s, t_vec3 p)
+{
+	add_sphere(s, vec3(p.x, p.y + 0.60, p.z), 0.60,
+		checked(shiny(mat(0.66, 0.34, 0.14), 0.5, 48), 0.3));
+	add_sphere(s, vec3(p.x + 0.62, p.y + 0.26, p.z + 0.18), 0.26,
+		mat(0.85, 0.70, 0.52));
+	add_sphere(s, vec3(p.x + 0.88, p.y + 0.50, p.z + 0.26), 0.20,
+		mat(0.85, 0.70, 0.52));
+}
+
+static void	butterfly(t_scene *s, t_vec3 p, t_color wl, t_color wr)
+{
+	add_sphere(s, p, 0.13, shiny(mat(0.18, 0.18, 0.28), 0.4, 32));
+	add_tri(s, vec3(p.x - 0.05, p.y + 0.05, p.z),
+		vec3(p.x - 0.78, p.y + 0.58, p.z + 0.16),
+		vec3(p.x - 0.66, p.y - 0.36, p.z + 0.10),
+		shiny(default_material(wl), 0.5, 48));
+	add_tri(s, vec3(p.x + 0.05, p.y + 0.05, p.z),
+		vec3(p.x + 0.78, p.y + 0.60, p.z - 0.14),
+		vec3(p.x + 0.66, p.y - 0.34, p.z - 0.10),
+		shiny(default_material(wr), 0.5, 48));
+}
+
+static void	creatures(t_scene *s)
+{
+	rabbit(s, vec3(3.2, 0, -6.2));
+	snail(s, vec3(-3.6, 0, -7.5));
+	butterfly(s, vec3(-1.2, 4.2, -1.5),
+		(t_color){0.95, 0.30, 0.60}, (t_color){0.98, 0.60, 0.15});
+	butterfly(s, vec3(3.6, 2.8, -4.6),
+		(t_color){0.62, 0.40, 0.95}, (t_color){0.35, 0.90, 0.55});
+}
+
+static void	surroundings(t_scene *s)
+{
+	mushroom(s, vec3(-5.2, 0, -16), 1.8, 1.10, mat(0.72, 0.90, 0.20));
+	mushroom(s, vec3(6.5, 0, -13.5), 2.6, 1.40,
+		checked(mat(0.20, 0.85, 0.75), 0.5));
+	mushroom(s, vec3(-10.5, 0, -9), 4.0, 1.80, mat(0.92, 0.45, 0.72));
+	add_cone(s, vec3(-13, 11, -19), vec3(0, -1, 0), 3.6, 11,
+		mat(0.12, 0.08, 0.26));
+	add_sphere(s, vec3(4.2, 5.2, -11.5), 0.62,
+		shiny(mat(0.98, 0.72, 0.50), 0.8, 128));
 }
 
 static void	fairy_ring(t_scene *s)
@@ -203,6 +274,8 @@ void	build_wonderland(t_scene *s)
 		checked(mat(0.20, 0.80, 0.90), 0.8));
 	fairy_ring(s);
 	scatter(s);
+	creatures(s);
+	surroundings(s);
 	add_light(s, vec3(-22, 26, -12), 0.75, (t_color){1.00, 0.35, 0.75});
 	add_light(s, vec3(11, 19, 31), 0.60, (t_color){0.75, 0.95, 1.00});
 	add_light(s, vec3(-1.5, 11, -4), 0.50, (t_color){1.00, 0.75, 0.35});

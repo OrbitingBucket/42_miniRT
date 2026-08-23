@@ -10,6 +10,7 @@
 void	build_wonderland(t_scene *s);
 
 static t_app	g_app;
+static t_color	*g_coarse;
 
 void	error_exit(const char *msg)
 {
@@ -43,6 +44,9 @@ EMSCRIPTEN_KEEPALIVE unsigned char	*rt_init(void)
 		error_exit("malloc failed");
 	g_app.fast = 0;
 	g_app.half = NULL;
+	g_coarse = malloc(sizeof(t_color) * (WIDTH / 2 + 2) * (HEIGHT / 2 + 2));
+	if (!g_coarse)
+		error_exit("malloc failed");
 	return ((unsigned char *)g_app.mlx.back_addr);
 }
 
@@ -62,43 +66,73 @@ EMSCRIPTEN_KEEPALIVE void	rt_set_fov(double fov)
 	g_app.scene.camera.fov = fov;
 }
 
-static void	fill_block(int x0, int y0, int step, t_color c)
+static t_color	lerp_c(t_color a, t_color b, double t)
 {
-	int	x;
-	int	y;
+	t_color	r;
 
-	y = y0 - 1;
-	while (++y < y0 + step && y < HEIGHT)
+	r.r = a.r + (b.r - a.r) * t;
+	r.g = a.g + (b.g - a.g) * t;
+	r.b = a.b + (b.b - a.b) * t;
+	return (r);
+}
+
+static void	sample_grid(t_camera_basis *b, int y_start, int step, int gw,
+		int gh)
+{
+	double	px;
+	double	py;
+	int		i;
+	int		j;
+
+	j = 0;
+	while (j < gh)
 	{
-		x = x0 - 1;
-		while (++x < x0 + step && x < WIDTH)
-			mlx_put_pixel(&g_app.mlx, x, y, c);
+		py = y_start + step * (j - 1) + step * 0.5;
+		i = 0;
+		while (i < gw)
+		{
+			px = step * (i - 1) + step * 0.5;
+			g_coarse[j * gw + i] = color_clamp(ray_color(get_ray(b,
+							px / (double)WIDTH, 1.0 - py / (double)HEIGHT),
+						&g_app.scene, MAX_DEPTH));
+			i++;
+		}
+		j++;
 	}
 }
 
 static void	render_blocks(int y_start, int y_end, int step)
 {
 	t_camera_basis	basis;
-	t_color			c;
-	double			u;
-	double			v;
-	int				xy[2];
+	int				gw;
+	int				gh;
+	int				x;
+	int				y;
 
 	basis = build_camera_basis(&g_app.scene.camera);
-	xy[1] = y_start;
-	while (xy[1] < y_end && xy[1] < HEIGHT)
+	gw = WIDTH / step + 2;
+	gh = (y_end - y_start) / step + 2;
+	sample_grid(&basis, y_start, step, gw, gh);
+	y = y_start;
+	while (y < y_end && y < HEIGHT)
 	{
-		xy[0] = 0;
-		while (xy[0] < WIDTH)
+		double	gyf = (y - y_start + 0.5 + step * 0.5) / step;
+		int		j0 = (int)gyf;
+		double	ty = gyf - j0;
+		x = 0;
+		while (x < WIDTH)
 		{
-			u = (xy[0] + step * 0.5) / (double)WIDTH;
-			v = 1.0 - (xy[1] + step * 0.5) / (double)HEIGHT;
-			c = ray_color(get_ray(&basis, u, v), &g_app.scene, MAX_DEPTH);
-			c = color_clamp(c);
-			fill_block(xy[0], xy[1], step, c);
-			xy[0] += step;
+			double	gxf = (x + 0.5 + step * 0.5) / step;
+			int		i0 = (int)gxf;
+			double	tx = gxf - i0;
+			t_color	top = lerp_c(g_coarse[j0 * gw + i0],
+					g_coarse[j0 * gw + i0 + 1], tx);
+			t_color	bot = lerp_c(g_coarse[(j0 + 1) * gw + i0],
+					g_coarse[(j0 + 1) * gw + i0 + 1], tx);
+			mlx_put_pixel(&g_app.mlx, x, y, lerp_c(top, bot, ty));
+			x++;
 		}
-		xy[1] += step;
+		y++;
 	}
 }
 
