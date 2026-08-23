@@ -4,27 +4,28 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy"
-	content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'unsafe-inline'; img-src 'self'">
-<title>miniRT</title>
+	content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; style-src 'unsafe-inline'; img-src 'self'">
+<title>Wonderland</title>
 <style>
-	html, body { margin: 0; height: 100%; background: #0d1117; color: #8b949e;
-		font-family: system-ui, sans-serif; }
-	.wrap { min-height: 100%; display: flex; flex-direction: column;
-		align-items: center; justify-content: center; gap: 14px; padding: 16px;
-		box-sizing: border-box; }
-	canvas { width: min(96vw, 800px); aspect-ratio: 4 / 3; height: auto;
-		border-radius: 6px; box-shadow: 0 8px 40px rgba(0,0,0,.6);
-		cursor: grab; touch-action: none; }
-	canvas:active { cursor: grabbing; }
-	h1 { font-size: 15px; font-weight: 500; color: #c9d1d9; margin: 0; }
-	p { font-size: 13px; margin: 0; }
+	html, body { margin: 0; height: 100%; background: #060410; overflow: hidden; }
+	canvas { position: fixed; inset: 0; width: 100vw; height: 100vh;
+		object-fit: cover; }
+	#overlay { position: fixed; inset: 0; display: flex; flex-direction: column;
+		align-items: center; justify-content: center; gap: 10px;
+		background: rgba(6, 4, 16, .45); color: #e8e2ff; cursor: pointer;
+		font-family: system-ui, sans-serif; text-align: center;
+		text-shadow: 0 2px 12px rgba(0,0,0,.8); }
+	#overlay h1 { font-weight: 500; font-size: 26px; margin: 0;
+		letter-spacing: .12em; }
+	#overlay p { font-size: 14px; margin: 0; opacity: .85; }
 </style>
 </head>
 <body>
-<div class="wrap">
-	<h1>miniRT</h1>
-	<canvas id="rt" width="800" height="600"></canvas>
-	<p>ray traced live in your browser. drag to look around, use WASD to move, scroll to zoom.</p>
+<canvas id="rt" width="1920" height="1080"></canvas>
+<div id="overlay">
+	<h1>wonderland</h1>
+	<p>click to enter</p>
+	<p>move the mouse to look around, walk with WASD, fly with Q and E</p>
 </div>
 <script src="minirt.js"></script>
 <script src="app.js"></script>

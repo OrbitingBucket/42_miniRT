@@ -20,8 +20,12 @@
 # include <unistd.h>
 
 # define EPSILON 1e-6
-# define WIDTH 800
-# define HEIGHT 600
+# ifndef WIDTH
+#  define WIDTH 800
+# endif
+# ifndef HEIGHT
+#  define HEIGHT 600
+# endif
 # define MAX_DEPTH 8
 # define SHADOW_BIAS 1e-4
 # define SLICE_ROWS 32

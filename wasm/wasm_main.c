@@ -7,8 +7,9 @@
 # define EMSCRIPTEN_KEEPALIVE
 #endif
 
+void	build_wonderland(t_scene *s);
+
 static t_app	g_app;
-static int		g_frame_ready;
 
 void	error_exit(const char *msg)
 {
@@ -31,94 +32,78 @@ void	mlx_put_pixel(t_mlx *mlx, int x, int y, t_color color)
 	dst[3] = 255;
 }
 
-void	present_frame(t_app *app)
-{
-	if (app->fast)
-		upsample_frame(app);
-	g_frame_ready = 1;
-	if (app->fast)
-	{
-		app->fast = 0;
-		app->row = 0;
-	}
-}
-
 EMSCRIPTEN_KEEPALIVE unsigned char	*rt_init(void)
 {
-	parse_scene("scene.rt", &g_app.scene);
+	build_wonderland(&g_app.scene);
 	g_app.mlx.bpp = 32;
 	g_app.mlx.line_len = WIDTH * 4;
 	g_app.mlx.back_addr = malloc((size_t)WIDTH * HEIGHT * 4);
 	g_app.mlx.addr = g_app.mlx.back_addr;
-	g_app.half = malloc(sizeof(t_color) * (WIDTH / 2) * (HEIGHT / 2));
-	if (!g_app.mlx.back_addr || !g_app.half)
+	if (!g_app.mlx.back_addr)
 		error_exit("malloc failed");
-	g_app.is_locked = 0;
-	g_app.needs_render = 1;
-	g_app.fast = 1;
-	g_app.row = HEIGHT;
-	g_app.drag = 0;
-	g_app.last_x = 0;
-	g_app.last_y = 0;
+	g_app.fast = 0;
+	g_app.half = NULL;
 	return ((unsigned char *)g_app.mlx.back_addr);
 }
 
-EMSCRIPTEN_KEEPALIVE int	rt_tick(void)
+EMSCRIPTEN_KEEPALIVE void	rt_set_cam(double px, double py, double pz,
+		double dx, double dy, double dz)
 {
-	int	end;
+	g_app.scene.camera.pos = vec3(px, py, pz);
+	g_app.scene.camera.dir = vec3_norm(vec3(dx, dy, dz));
+}
 
-	g_frame_ready = 0;
-	if (g_app.needs_render)
+static void	fill_block(int x0, int y0, int step, t_color c)
+{
+	int	x;
+	int	y;
+
+	y = y0 - 1;
+	while (++y < y0 + step && y < HEIGHT)
 	{
-		g_app.needs_render = 0;
-		g_app.row = 0;
+		x = x0 - 1;
+		while (++x < x0 + step && x < WIDTH)
+			mlx_put_pixel(&g_app.mlx, x, y, c);
 	}
-	if (g_app.row >= HEIGHT)
-		return (0);
-	end = g_app.row + SLICE_ROWS;
-	if (end > HEIGHT)
-		end = HEIGHT;
-	render_span(&g_app, g_app.row, end);
-	g_app.row = end;
-	if (g_app.row >= HEIGHT)
-		present_frame(&g_app);
-	return (g_frame_ready);
 }
 
-EMSCRIPTEN_KEEPALIVE int	rt_idle(void)
+static void	render_blocks(int y_start, int y_end, int step)
 {
-	return (!g_app.needs_render && g_app.row >= HEIGHT);
+	t_camera_basis	basis;
+	t_color			c;
+	double			u;
+	double			v;
+	int				xy[2];
+
+	basis = build_camera_basis(&g_app.scene.camera);
+	xy[1] = y_start;
+	while (xy[1] < y_end && xy[1] < HEIGHT)
+	{
+		xy[0] = 0;
+		while (xy[0] < WIDTH)
+		{
+			u = (xy[0] + step * 0.5) / (double)WIDTH;
+			v = 1.0 - (xy[1] + step * 0.5) / (double)HEIGHT;
+			c = ray_color(get_ray(&basis, u, v), &g_app.scene, MAX_DEPTH);
+			c = color_clamp(c);
+			fill_block(xy[0], xy[1], step, c);
+			xy[0] += step;
+		}
+		xy[1] += step;
+	}
 }
 
-EMSCRIPTEN_KEEPALIVE void	rt_key(int keycode)
+EMSCRIPTEN_KEEPALIVE void	rt_render_band(int y0, int y1, int quality)
 {
-	handle_move(&g_app, keycode);
-}
-
-EMSCRIPTEN_KEEPALIVE void	rt_press(int x, int y)
-{
-	g_app.drag = 1;
-	g_app.last_x = x;
-	g_app.last_y = y;
-}
-
-EMSCRIPTEN_KEEPALIVE void	rt_move(int x, int y)
-{
-	mouse_move(x, y, &g_app);
-}
-
-EMSCRIPTEN_KEEPALIVE void	rt_release(void)
-{
-	g_app.drag = 0;
-}
-
-EMSCRIPTEN_KEEPALIVE void	rt_wheel(int dir)
-{
-	g_app.scene.camera.fov += 5 * dir;
-	if (g_app.scene.camera.fov < 1)
-		g_app.scene.camera.fov = 1;
-	if (g_app.scene.camera.fov > 179)
-		g_app.scene.camera.fov = 179;
-	g_app.fast = 1;
-	g_app.needs_render = 1;
+	if (quality == 0)
+	{
+		g_app.fast = 0;
+		render_span(&g_app, y0, y1);
+	}
+	else if (quality == 1)
+		render_blocks(y0, y1, 2);
+	else if (quality == 2)
+		render_blocks(y0, y1, 4);
+	else
+		render_blocks(y0, y1, 8);
 }
