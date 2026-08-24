@@ -33,22 +33,3 @@ char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 	dup[i] = '\0';
 	return (dup);
 }
-/*
-char	to_upper(unsigned int i, char c)
-{
-	(void)i;
-	if (c >= 'a' && c <= 'z')
-		return (c - 32);
-	return (c);
-}
-
-int	main(void)
-{
-	char	*result;
-
-	result = ft_strmapi("hello 42!", to_upper);
-	printf("Original: hello 42!\n");
-	printf("Result:   %s\n", result);
-	free(result);
-	return (0);
-}*/

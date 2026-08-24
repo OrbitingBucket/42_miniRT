@@ -30,19 +30,3 @@ char	*ft_strdup(const char *s)
 	dup[len] = '\0';
 	return (dup);
 }
-/*
-int	main(void)
-{
-	char	*ft_result;
-	char	*std_result;
-
-	ft_result = ft_strdup("Hello, 42!");
-	std_result = strdup("Hello, 42!");
-
-	printf("ft_strdup: %s\n", ft_result);
-	printf("strdup:    %s\n", std_result);
-
-	free(ft_result);
-	free(std_result);
-	return (0);
-}*/

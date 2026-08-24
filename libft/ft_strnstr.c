@@ -34,18 +34,3 @@ char	*ft_strnstr(const char *big, const char *little, size_t len)
 	}
 	return (NULL);
 }
-/*
-int	main(void)
-{
-	const char	*big = "Hello World";
-	const char	*little = "World";
-	char		*result;
-
-	result = ft_strnstr(big, little, 20);
-	printf("ft_strnstr (len=20): %s\n", result);
-	result = ft_strnstr(big, little, 5);
-	printf("ft_strnstr (len=5) : %p\n", (void *)result);
-	result = ft_strnstr(big, "Hello", 20);
-	printf("ft_strnstr \"Hello\" : %s\n", result);
-	return (0);
-}*/

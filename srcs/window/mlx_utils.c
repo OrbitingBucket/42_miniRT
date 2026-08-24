@@ -12,9 +12,6 @@
 
 #include "miniRT.h"
 
-/* Write one pixel into the image buffer.
-** Never call mlx_pixel_put — it's extremely slow (one syscall per pixel).
-** We write into the raw buffer and flush once per frame instead.*/
 void	mlx_put_pixel(t_mlx *mlx, int x, int y, t_color color)
 {
 	char	*dst;

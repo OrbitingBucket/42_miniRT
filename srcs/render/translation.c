@@ -12,9 +12,6 @@
 
 #include "miniRT.h"
 
-/*
-** 辅助函数：计算相机的右向量 (right)
-*/
 t_vec3	get_cam_right(t_vec3 dir)
 {
 	t_vec3	world_up;
@@ -26,9 +23,6 @@ t_vec3	get_cam_right(t_vec3 dir)
 	return (vec3_norm(vec3_cross(dir, world_up)));
 }
 
-/*
-** 根据按键修改相机坐标
-*/
 void	move_camera(int key, t_camera *cam, double speed)
 {
 	t_vec3	right;

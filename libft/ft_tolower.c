@@ -18,14 +18,3 @@ int	ft_tolower(int c)
 		return (c + 32);
 	return (c);
 }
-/*
-int	main(void)
-{
-	printf("ft_tolower('A') : %c\n", ft_tolower('A'));
-	printf("tolower('A')    : %c\n", tolower('A'));
-	printf("ft_tolower('z') : %c\n", ft_tolower('z'));
-	printf("tolower('z')    : %c\n", tolower('z'));
-	printf("ft_tolower('5') : %c\n", ft_tolower('5'));
-	printf("tolower('5')    : %c\n", tolower('5'));
-	return (0);
-}*/

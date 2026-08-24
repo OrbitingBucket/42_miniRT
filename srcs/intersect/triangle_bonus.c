@@ -12,16 +12,6 @@
 
 #include "miniRT_bonus.h"
 
-/*
-** Möller–Trumbore — direct linear solve, no quadratic needed.
-**
-** Solve: O + t*D = v0 + u*e1 + v*e2
-** where e1 = v1-v0, e2 = v2-v0, u+v ≤ 1, u ≥ 0, v ≥ 0.
-**
-** det > 0  → ray hits front face
-** det < 0  → ray hits back face (also valid, normals flip)
-** det ≈ 0  → ray parallel to triangle
-*/
 static int	tri_solve(t_ray ray, t_object *obj, double *uvt)
 {
 	t_vec3	e[2];

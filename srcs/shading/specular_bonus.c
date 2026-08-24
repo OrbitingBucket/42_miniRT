@@ -12,11 +12,6 @@
 
 #include "miniRT_bonus.h"
 
-/*
-** Phong specular — reflects the light source itself, not the object color.
-** Highlight is therefore always white (or light-tinted in step 3).
-** shininess controls the exponent: low = soft blob, high = tight glint.
-*/
 t_color	specular_light(t_hit *hit, t_light *light, t_ray ray)
 {
 	t_vec3	to_light;

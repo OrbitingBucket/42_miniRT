@@ -25,23 +25,3 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 		*d++ = *s++;
 	return (dst);
 }
-/*
-int	main(void)
-{
-	unsigned char	ft_dst[16];
-	unsigned char	libc_dst[16];
-	unsigned char	src[] = "libft test";
-	size_t			i;
-
-	ft_memcpy(ft_dst, src, sizeof(src));
-	memcpy(libc_dst, src, sizeof(src));
-	printf("ft_memcpy : ");
-	for (i = 0; i < sizeof(src); i++)
-		printf("%c", ft_dst[i]);
-	printf("\n");
-	printf("memcpy    : ");
-	for (i = 0; i < sizeof(src); i++)
-		printf("%c", libc_dst[i]);
-	printf("\n");
-	return (0);
-}*/

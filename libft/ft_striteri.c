@@ -25,20 +25,3 @@ void	ft_striteri(char *s, void (*f)(unsigned int, char *))
 		i++;
 	}
 }
-/*
-void to_upper(unsigned int i, char *c)
-{
-    (void)i;
-    if (*c >= 'a' && *c <= 'z')
-        *c = *c - 'a' + 'A';
-}
-
-int main(void)
-{
-    char s[] = "Hello 42!";
-
-    ft_striteri(s, to_upper);
-    printf("%s\n", s);
-
-    return 0;
-}*/

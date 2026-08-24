@@ -4,24 +4,19 @@ BONUS_NAME  = miniRT_bonus
 CC          = cc
 CFLAGS      = -Wall -Wextra -Werror -ggdb
 
-# 终端输出颜色定义
 GREEN       = \033[0;32m
 YELLOW      = \033[0;33m
 RESET       = \033[0m
 
-# 1. 核心定义：MLX 的目录
 MLX_DIR 	= mlx_linux
 MLX		= $(MLX_DIR)/libmlx.a
 LIBFT_DIR   = libft
 LIBFT       = $(LIBFT_DIR)/libft.a
 
-# 2. 包含路径：让编译器既能找到你的 includes，也能找到 MLX 的头文件&libft 头文件路径
 INCLUDES    = -I includes/ -I $(MLX_DIR) -I $(LIBFT_DIR)
 
-# 3. 链接标志：-L 指定库目录，-lmlx 和 -lft 指定链接库
 LIBS        = -L$(MLX_DIR) -lmlx -L$(LIBFT_DIR) -lft -lXext -lX11 -lm
 
-# 4. 两个构建共用的源文件
 COMMON_SRCS = srcs/main.c \
               srcs/math/vec3.c \
               srcs/math/vec3_bis.c \
@@ -54,14 +49,12 @@ COMMON_SRCS = srcs/main.c \
               srcs/shading/shadow.c \
               srcs/shading/attenuation.c
 
-# 5. partie obligatoire seulement, sphère plan cylindre, ambiant et diffus
 MAND_SRCS   = srcs/parser/dispatch.c \
               srcs/parser/parse_opts.c \
               srcs/parser/parse_light.c \
               srcs/intersect/hit_object.c \
               srcs/shading/shade.c
 
-# 6. bonus seulement, cône triangle spéculaire matériaux et lumières multiples
 BONUS_SRCS  = srcs/parser/dispatch_bonus.c \
               srcs/parser/parse_opts_bonus.c \
               srcs/parser/parse_light_bonus.c \
@@ -94,13 +87,11 @@ $(BONUS_NAME): $(MLX) $(LIBFT) $(COMMON_OBJS) $(BONUS_OBJS)
 	$(CC) $(CFLAGS) $(COMMON_OBJS) $(BONUS_OBJS) $(LIBS) -o $(BONUS_NAME)
 	@printf "$(GREEN)✓ $(BONUS_NAME) built successfully!$(RESET)\n"
 
-# 编译 MiniLibX
 $(MLX):
 	@echo "$(YELLOW)🎨 Compiling MiniLibX...$(RESET)\n"
 	@make -sC $(MLX_DIR)
 	@printf "$(GREEN)✓ MLX ready$(RESET)\n"
 
-# 编译 Libft
 $(LIBFT):
 	@printf "$(YELLOW)Compiling libft...$(RESET)\n"
 	@make -sC $(LIBFT_DIR)

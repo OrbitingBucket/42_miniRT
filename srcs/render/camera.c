@@ -12,12 +12,6 @@
 
 #include "miniRT.h"
 
-/*
-** Build the viewport basis once per render.
-** We need an 'up' hint to build the right vector via cross product.
-** If the camera looks straight up or down, use a different hint.
-*/
-// 计算相机的右方向 (right) 和上方向 (up) 轴
 static void	get_camera_axes(t_vec3 dir, t_vec3 *right, t_vec3 *up)
 {
 	t_vec3	world_up;
@@ -30,7 +24,6 @@ static void	get_camera_axes(t_vec3 dir, t_vec3 *right, t_vec3 *up)
 	*up = vec3_norm(vec3_cross(*right, dir));
 }
 
-// 填充视口尺寸并计算相机基底的各个向量
 static void	compute_basis(t_camera *cam, t_camera_basis *b)
 {
 	t_vec3	right;
@@ -57,9 +50,6 @@ t_camera_basis	build_camera_basis(t_camera *cam)
 	compute_basis(cam, &b);
 	return (b);
 }
-
-// t_camera_basis  build_camera_basis(t_camera *cam)
-// {
 
 t_ray	get_ray(t_camera_basis *b, double u, double v)
 {

@@ -41,11 +41,3 @@ int	ft_atoi(const char *str)
 	}
 	return ((int)(res * sign));
 }
-/*
-int	main(int ac, char **av)
-{
-	(void)ac;
-
-	printf("%d\n", ft_atoi(av[1]));
-	printf("%d\n", atoi(av[1]));
-}*/

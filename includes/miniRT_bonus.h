@@ -15,7 +15,6 @@
 
 # include "miniRT.h"
 
-/* ── Bonus objects ────────────────────────────────────────────── */
 void				parse_cone(char **tokens, t_scene *scene);
 void				parse_triangle(char **tokens, t_scene *scene);
 int					intersect_cone(t_ray ray, t_object *obj, t_hit *hit);
@@ -25,7 +24,6 @@ t_vec3				cone_body_normal(t_object *obj, t_vec3 point, double proj);
 int					check_cone_body(t_ray ray, t_object *obj, t_hit *hit,
 						t_quad *q);
 
-/* ── Bonus shading ────────────────────────────────────────────── */
 t_color				specular_light(t_hit *hit, t_light *light, t_ray view_ray);
 void				apply_checker(t_hit *hit, t_material *tmp);
 

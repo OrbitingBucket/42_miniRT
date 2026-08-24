@@ -12,7 +12,6 @@
 
 #include "miniRT.h"
 
-/* offset */
 static t_ray	make_shadow_ray(t_hit *hit, t_light *light)
 {
 	t_ray	ray;

@@ -36,25 +36,3 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 	}
 	return (new_lst);
 }
-/*
-void	*dup(void *content)
-{
-	return (ft_strdup((char*)content));
-}
-
-void	del(void *content)
-{
-	free(content);
-}
-
-int main(void)
-{
-	t_list *head = ft_lstnew("A");
-	ft_lstadd_back(&head, ft_lstnew("B"));
-	t_list *new = ft_lstmap(head, dup, del);
-	for (t_list *p = new; p; p = p->next)
-		printf("%s ", (char*)p->content);
-	printf("\n");
-	ft_lstclear(&new, del);
-}
-*/

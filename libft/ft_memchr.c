@@ -31,20 +31,3 @@ void	*ft_memchr(const void *s, int c, size_t n)
 	}
 	return (NULL);
 }
-/*
-int	main(void)
-{
-	char	buf[] = "ABC\0DEF";
-	char	*ft_result;
-	char	*libc_result;
-
-	ft_result = ft_memchr(buf, 'D', sizeof(buf));
-	libc_result = memchr(buf, 'D', sizeof(buf));
-	printf("ft_memchr  : %s\n", ft_result);
-	printf("memchr     : %s\n", libc_result);
-	ft_result = ft_memchr(buf, 'Z', sizeof(buf));
-	libc_result = memchr(buf, 'Z', sizeof(buf));
-	printf("ft_memchr Z: %p\n", (void *)ft_result);
-	printf("memchr Z   : %p\n", (void *)libc_result);
-	return (0);
-}*/

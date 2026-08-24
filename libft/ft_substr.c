@@ -38,18 +38,3 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	ft_strlcpy(sub, s + start, sub_len + 1);
 	return (sub);
 }
-/*
-int	main(void)
-{
-	char	*result;
-
-	result = ft_substr("Hello, 42!", 0, 5);
-	printf("ft_substr(\"Hello, 42!\", 0, 5): %s\n", result);
-	free(result);
-
-	result = ft_substr("Hello, 42!", 7, 2);
-	printf("ft_substr(\"Hello, 42!\", 7, 2): %s\n", result);
-	free(result);
-
-	return (0);
-}*/

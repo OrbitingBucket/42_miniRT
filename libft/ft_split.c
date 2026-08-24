@@ -93,14 +93,3 @@ char	**ft_split(char const *s, char c)
 	split[i] = NULL;
 	return (split);
 }
-/*
-int	main(int ac, char **av)
-{
-	(void)ac;
-	char **result = ft_split(av[1], av[2][0]);
-	for (int i = 0; result[i]; i++)
-	{
-		printf("[%d]: %s\n", i, result[i]);
-		free(result[i]);
-	}
-}*/

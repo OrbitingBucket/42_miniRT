@@ -12,11 +12,6 @@
 
 #include "miniRT.h"
 
-/*
-** Fill q.a, q.b, q.c, then call quad_solve().
-** Returns 0 if discriminant is negative (no real roots).
-** On success, q.disc and q.sqrt_disc are ready for root queries.
-*/
 int	quad_solve(t_quad *q)
 {
 	q->disc = q->b * q->b - 4.0 * q->a * q->c;
@@ -26,23 +21,16 @@ int	quad_solve(t_quad *q)
 	return (1);
 }
 
-/* smaller root — front surface for outside rays */
 double	quad_root1(t_quad *q)
 {
 	return ((-q->b - q->sqrt_disc) / (2.0 * q->a));
 }
 
-/* larger root — back surface, used when ray starts inside */
 double	quad_root2(t_quad *q)
 {
 	return ((-q->b + q->sqrt_disc) / (2.0 * q->a));
 }
 
-/*
-** Try root1 first, fall back to root2.
-** Returns 1 and writes the nearest positive t, 0 if both are behind.
-** Perfect for sphere and any future second-degree object (cone etc.)
-*/
 int	quad_nearest(t_quad *q, double *t)
 {
 	*t = quad_root1(q);

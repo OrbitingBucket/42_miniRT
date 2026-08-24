@@ -25,13 +25,3 @@ void	ft_lstiter(t_list *lst, void (*f)(void *))
 		current = current->next;
 	}
 }
-
-/*void print(void *content) { printf("%s ", (char*)content); }
-int main(void)
-{
-	t_list *head = ft_lstnew("A");
-	ft_lstadd_back(&head, ft_lstnew("B"));
-	ft_lstadd_back(&head, ft_lstnew("C"));
-	ft_lstiter(head, print);
-	printf("\n");
-}*/

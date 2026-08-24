@@ -33,18 +33,3 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 	dst[dlen + i] = '\0';
 	return (dlen + slen);
 }
-/*
-int	main(void)
-{
-	char		ft_buf[20] = "Hello ";
-	char		libc_buf[20] = "Hello ";
-	const char	*src = "World";
-	size_t		ft_ret;
-	size_t		libc_ret;
-
-	ft_ret = ft_strlcat(ft_buf, src, sizeof(ft_buf));
-	libc_ret = strlcat(libc_buf, src, sizeof(libc_buf));
-	printf("ft_strlcat : %zu -> %s\n", ft_ret, ft_buf);
-	printf("strlcat    : %zu -> %s\n", libc_ret, libc_buf);
-	return (0);
-}*/

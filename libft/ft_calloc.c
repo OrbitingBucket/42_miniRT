@@ -24,28 +24,3 @@ void	*ft_calloc(size_t count, size_t size)
 	ft_bzero(ptr, count * size);
 	return (ptr);
 }
-/*
-#include <stdio.h>
-int	main(void)
-{
-	int		*ft_arr;
-	int		*std_arr;
-	size_t	i;
-
-	ft_arr = ft_calloc(5, sizeof(int));
-	std_arr = calloc(5, sizeof(int));
-
-	printf("ft_calloc: ");
-	for (i = 0; i < 5; i++)
-		printf("%d ", ft_arr[i]);
-	printf("\n");
-
-	printf("calloc:    ");
-	for (i = 0; i < 5; i++)
-		printf("%d ", std_arr[i]);
-	printf("\n");
-
-	free(ft_arr);
-	free(std_arr);
-	return (0);
-}*/

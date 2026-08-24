@@ -31,20 +31,3 @@ char	*ft_strrchr(const char *s, int c)
 		return ((char *)(s + i));
 	return ((char *)last);
 }
-/*
-int	main(void)
-{
-	const char	*str = "Hello World";
-	char		*ft_result;
-	char		*libc_result;
-
-	ft_result = ft_strrchr(str, 'o');
-	libc_result = strrchr(str, 'o');
-	printf("ft_strrchr  : %s\n", ft_result);
-	printf("strrchr     : %s\n", libc_result);
-	ft_result = ft_strrchr(str, 'Z');
-	libc_result = strrchr(str, 'Z');
-	printf("ft_strrchr Z: %p\n", (void *)ft_result);
-	printf("strrchr Z   : %p\n", (void *)libc_result);
-	return (0);
-}*/

@@ -26,22 +26,3 @@ void	*ft_memset(void *s, int c, size_t n)
 	}
 	return (s);
 }
-/*
-int	main(void)
-{
-	unsigned char	ft_buf[8];
-	unsigned char	libc_buf[8];
-	size_t			i;
-
-	ft_memset(ft_buf, 'A', sizeof(ft_buf));
-	memset(libc_buf, 'A', sizeof(libc_buf));
-	printf("ft_memset  : ");
-	for (i = 0; i < sizeof(ft_buf); i++)
-		printf("%c", ft_buf[i]);
-	printf("\n");
-	printf("memset     : ");
-	for (i = 0; i < sizeof(libc_buf); i++)
-		printf("%c", libc_buf[i]);
-	printf("\n");
-	return (0);
-}*/

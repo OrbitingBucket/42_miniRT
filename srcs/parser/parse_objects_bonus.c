@@ -32,11 +32,6 @@ void	parse_cone(char **tokens, t_scene *scene)
 	append_object(scene, obj);
 }
 
-/*
-** tr <v0 x,y,z> <v1 x,y,z> <v2 x,y,z> <r,g,b> [material]
-** Normal is precomputed: cross(v1-v0, v2-v0)
-** Order of vertices determines which face is front (right-hand rule).
-*/
 void	parse_triangle(char **tokens, t_scene *scene)
 {
 	t_object	*obj;

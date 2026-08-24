@@ -24,25 +24,3 @@ int	ft_lstsize(t_list *lst)
 	}
 	return (size);
 }
-
-/*int main(void) {
-    t_list *head = NULL;
-
-    printf("size (empty)      = %d\n", ft_lstsize(head));
-
-    ft_lstadd_front(&head, ft_lstnew("A"));
-    printf("size after A      = %d\n", ft_lstsize(head));
-
-    ft_lstadd_front(&head, ft_lstnew("B"));
-    printf("size after B,A    = %d\n", ft_lstsize(head));
-
-    ft_lstadd_front(&head, ft_lstnew("C"));
-    printf("size after C,B,A  = %d\n", ft_lstsize(head));
-
-    while (head) {
-        t_list *next = head->next;
-        free(head);
-        head = next;
-    }
-    return 0;
-}*/

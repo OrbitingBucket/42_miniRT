@@ -12,8 +12,6 @@
 
 #include "miniRT.h"
 
-// Set the normal to always face the incoming ray.
-// Store whether we hit the front or back face.
 static void	set_face_normal(t_hit *hit, t_ray ray, t_vec3 outward_normal)
 {
 	if (vec3_dot(ray.dir, outward_normal) < 0)
@@ -27,9 +25,6 @@ static void	set_face_normal(t_hit *hit, t_ray ray, t_vec3 outward_normal)
 		hit->normal = vec3_negate(outward_normal);
 	}
 }
-
-// static double	get_sphere_t(double a, double b, double c)
-// {
 
 int	intersect_sphere(t_ray ray, t_object *obj, t_hit *hit)
 {

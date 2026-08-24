@@ -12,7 +12,6 @@
 
 #include "miniRT.h"
 
-/* read one line from fd into a heap buffer — basic gnl replacement */
 static void	bump_total(long *total)
 {
 	*total += 1;

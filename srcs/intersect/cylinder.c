@@ -12,9 +12,6 @@
 
 #include "miniRT.h"
 
-/*
-** Intersects ray with cylinder body.
-*/
 static int	hit_body(t_ray ray, t_object *obj, t_hit *hit)
 {
 	t_quad	q;
@@ -36,9 +33,6 @@ static int	hit_body(t_ray ray, t_object *obj, t_hit *hit)
 	return (0);
 }
 
-/*
-** Intersects ray with a cylinder cap.
-*/
 static void	cap_plane(t_object *obj, int top, t_vec3 *center, t_vec3 *normal)
 {
 	if (top)
@@ -75,9 +69,6 @@ static int	hit_cap(t_ray ray, t_object *obj, t_hit *hit, int top)
 	return (1);
 }
 
-/*
-** Full cylinder: test body and both caps, return closest valid hit.
-*/
 int	intersect_cylinder(t_ray ray, t_object *obj, t_hit *hit)
 {
 	t_hit	tmp;

@@ -25,9 +25,3 @@ t_color	diffuse_light(t_hit *hit, t_light *light)
 	intensity *= attenuation(light, hit->point);
 	return (color_scale(hit->mat->color, intensity));
 }
-
-/* Diffuse contribution from one light (Lambertian).
-** dot(normal, to_light) is the cosine of the angle —
-** 1.0 when light hits perpendicularly, 0.0 at grazing.*/
-// static t_color  diffuse_light(t_hit *hit, t_light *light)
-// {

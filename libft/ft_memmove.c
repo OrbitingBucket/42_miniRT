@@ -40,20 +40,3 @@ void	*ft_memmove(void *dst, const void *src, size_t n)
 	}
 	return (dst);
 }
-/*
-int main(void)
-{
-	char a[16] = "ABCDEFGHIJ";
-	char b[16] = "ABCDEFGHIJ";
-	char c[16] = "ABCDEFGHIJ";
-
-	ft_memmove(a + 2, a, 5);
-	printf("right shift : %s\n", a);
-
-	ft_memmove(b, b + 2, 5);
-	printf("left shift  : %s\n", b);
-
-	ft_memmove(c, "hello", 6);
-	printf("no overlap  : %s\n", c);
-	return 0;
-}*/

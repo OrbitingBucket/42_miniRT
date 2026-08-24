@@ -33,14 +33,3 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	ft_strlcpy(join + len1, s2, len2 + 1);
 	return (join);
 }
-/*
-int	main(void)
-{
-	char	*result;
-
-	result = ft_strjoin("Hello, ", "42!");
-	printf("ft_strjoin(\"Hello, \", \"42!\"): %s\n", result);
-	free(result);
-
-	return (0);
-}*/

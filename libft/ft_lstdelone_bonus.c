@@ -19,12 +19,3 @@ void	ft_lstdelone(t_list *lst, void (*del)(void *))
 	del(lst->content);
 	free(lst);
 }
-
-/*void del(void *content) { (void)content; }
-int main(void)
-{
-	t_list *node = ft_lstnew("Test");
-	printf("before: %p\n", (void*)node);
-	ft_lstdelone(node, del);
-	printf("deleted\n");
-}*/

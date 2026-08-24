@@ -29,20 +29,3 @@ char	*ft_strchr(const char *s, int c)
 		return ((char *)(s + i));
 	return (NULL);
 }
-/*
-int	main(void)
-{
-	const char	*str = "Hello World";
-	char		*ft_result;
-	char		*libc_result;
-
-	ft_result = ft_strchr(str, 'W');
-	libc_result = strchr(str, 'W');
-	printf("ft_strchr  : %s\n", ft_result);
-	printf("strchr     : %s\n", libc_result);
-	ft_result = ft_strchr(str, 'Z');
-	libc_result = strchr(str, 'Z');
-	printf("ft_strchr Z: %p\n", (void *)ft_result);
-	printf("strchr Z   : %p\n", (void *)libc_result);
-	return (0);
-}*/

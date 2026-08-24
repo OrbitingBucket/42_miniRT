@@ -28,16 +28,3 @@ void	ft_lstadd_back(t_list **lst, t_list *new)
 		last = last->next;
 	last->next = new;
 }
-
-/*int main(void)
-{
-    t_list *head = NULL;
-
-    ft_lstadd_back(&head, ft_lstnew("A"));
-    ft_lstadd_back(&head, ft_lstnew("B"));
-    ft_lstadd_back(&head, ft_lstnew("C"));
-
-    for (t_list *p = head; p; p = p->next)
-        printf("%s -> ", (char*)p->content);
-    printf("NULL\n");
-}*/

@@ -12,10 +12,6 @@
 
 #include "miniRT.h"
 
-/*
-** Background: simple sky gradient when no object is hit.
-** Lerp white→blue based on ray vertical direction.
-*/
 static t_color	background(t_ray ray)
 {
 	double	t;
@@ -27,9 +23,6 @@ static t_color	background(t_ray ray)
 	t = (ray.dir.y + 1.0) * 0.5;
 	return (color_lerp(white, blue, t));
 }
-
-// t_color ray_color(t_ray ray, t_scene *scene)
-// {
 
 t_color	ray_color(t_ray ray, t_scene *scene, int depth)
 {

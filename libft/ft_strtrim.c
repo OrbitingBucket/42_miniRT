@@ -58,17 +58,3 @@ char	*ft_strtrim(char const *s1, char const *set)
 	end = ft_trimend(s1, set);
 	return (ft_substr(s1, start, end - start));
 }
-
-/*
-int	main(int ac, char **av)
-{
-	char	*result;
-
-	(void)ac;
-	result = ft_strtrim(av[1], av[2]);
-	if (result)
-	{
-		printf("%s\n", result);
-		free(result);
-	}
-}*/

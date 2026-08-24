@@ -12,11 +12,6 @@
 
 #include "miniRT_bonus.h"
 
-/*
-** Fill quad coefficients for the cone body.
-** k = radius/height = tan(half-angle)
-** q->m (dot dir,axis) and q->n (dot oc,axis) are kept for height clamping.
-*/
 void	cone_quad(t_ray ray, t_object *obj, t_quad *q)
 {
 	t_vec3	oc;
@@ -35,10 +30,6 @@ void	cone_quad(t_ray ray, t_object *obj, t_quad *q)
 	q->c = vec3_dot(oc_perp, oc_perp) - k * k * (q->n) * (q->n);
 }
 
-/*
-** Outward normal: normalize(perp - k²*proj*axis)
-** perp = hit_point - apex - proj*axis  (radial vector at that height)
-*/
 t_vec3	cone_body_normal(t_object *obj, t_vec3 point, double proj)
 {
 	t_vec3	perp;

@@ -22,15 +22,11 @@ t_color	color_add(t_color a, t_color b)
 	return ((t_color){a.r + b.r, a.g + b.g, a.b + b.b});
 }
 
-/*Component-wise multiply, normalized by 255
-  Used to tint object color by light color or ambient color*/
 t_color	color_multiply(t_color a, t_color b)
 {
 	return ((t_color){a.r * b.r, a.g * b.g, a.b * b.b});
 }
 
-/* Clamp color components to [0.0, 1.0] range.
-Always call this as the last step before writing a pixel.*/
 t_color	color_clamp(t_color c)
 {
 	t_color	out;
@@ -53,11 +49,6 @@ t_color	color_clamp(t_color c)
 	return (out);
 }
 
-/*
-** Linear interpolation between two colors.
-** t = 0.0 → a,  t = 1.0 → b.
-** Used for: checkerboard, sky gradient, glossy mixing.
-*/
 t_color	color_lerp(t_color a, t_color b, double t)
 {
 	return (color_clamp(color_add(color_scale(a, 1.0 - t),

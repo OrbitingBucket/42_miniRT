@@ -29,20 +29,3 @@ int	ft_memcmp(const void *s1, const void *s2, size_t n)
 	}
 	return (0);
 }
-/*
-int main(void)
-{
-	const char a[] = {0x41, 0x42, 0xC8, 0x00};
-	const char b[] = {0x41, 0x42, 0x7F, 0x00};
-
-	printf("n=2  -> %d (std %d)\n",
-		ft_memcmp(a, b, 2), memcmp(a, b, 2)); 
-	printf("n=3  -> %d (std %d)\n",
-		ft_memcmp(a, b, 3), memcmp(a, b, 3)); 
-	printf("n=0  -> %d (std %d)\n",
-		ft_memcmp(a, b, 0), memcmp(a, b, 0)); 
-
-	printf("'abc' vs 'abd' (n=3): %d\n",
-		ft_memcmp("abc", "abd", 3));
-	return 0;
-}*/

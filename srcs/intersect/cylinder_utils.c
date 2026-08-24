@@ -12,9 +12,6 @@
 
 #include "miniRT.h"
 
-/*
-** Solves quadratic for cylinder body intersection.
-*/
 int	cylinder_quadratic(t_ray ray, t_object *obj, t_quad *q)
 {
 	t_vec3	oc;
@@ -33,9 +30,6 @@ int	cylinder_quadratic(t_ray ray, t_object *obj, t_quad *q)
 	return (q->disc >= 0.0);
 }
 
-/*
-** Validates body hit: checks t > EPSILON and within height bounds.
-*/
 static int	valid_body_hit(t_ray ray, t_object *obj, double t)
 {
 	double	proj;
@@ -48,10 +42,6 @@ static int	valid_body_hit(t_ray ray, t_object *obj, double t)
 		/ 2.0);
 }
 
-/*
-** Outward normal for a point on the cylinder body.
-** Project hit point onto axis, subtract that component.
-*/
 t_vec3	body_normal(t_object *obj, t_vec3 point)
 {
 	double	proj;
@@ -78,9 +68,6 @@ int	check_body_hit(t_ray ray, t_object *obj, t_hit *hit, double t)
 	return (1);
 }
 
-/*
-** Sets hit data for a valid cap intersection.
-*/
 void	set_cap_hit(t_ray ray, t_object *obj, t_hit *hit, t_vec3 normal)
 {
 	hit->point = ray_at(ray, hit->t);

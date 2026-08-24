@@ -21,12 +21,3 @@ size_t	ft_strlen(const char *s)
 		len++;
 	return (len);
 }
-/*
-int	main(void)
-{
-	const char	*test = "Hello, world!";
-
-	printf("ft_strlen : %zu\n", ft_strlen(test));
-	printf("strlen    : %zu\n", strlen(test));
-	return (0);
-}*/
