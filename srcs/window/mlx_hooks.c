@@ -35,14 +35,14 @@ int	mouse_hook(int button, int x, int y, void *param)
 	}
 	else
 		return (0);
-	render(app);
+	app->fast = 1;
+	app->needs_render = 1;
 	return (0);
 }
 
 int	key_handler(int keycode, void *param)
 {
 	t_app	*app;
-	double	move_speed;
 
 	app = (t_app *)param;
 	if (keycode == KEY_ESC)
@@ -58,21 +58,18 @@ int	key_handler(int keycode, void *param)
 	}
 	if (app->is_locked)
 		return (0);
-	move_speed = 0.5;
-	if (keycode == 119 || keycode == 115 || keycode == 100 || keycode == 97)
-	{
-		move_camera(keycode, &app->scene.camera, move_speed);
-		render(app);
-	}
+	handle_move(app, keycode);
 	return (0);
 }
 
 int	close_handler(t_app *app)
 {
 	mlx_destroy_image(app->mlx.ptr, app->mlx.img);
+	mlx_destroy_image(app->mlx.ptr, app->mlx.back);
 	mlx_destroy_window(app->mlx.ptr, app->mlx.win);
 	mlx_destroy_display(app->mlx.ptr);
 	free(app->mlx.ptr);
+	free(app->half);
 	free_scene(&app->scene);
 	exit(0);
 }
@@ -80,5 +77,26 @@ int	close_handler(t_app *app)
 int	expose_handler(t_app *app)
 {
 	mlx_put_image_to_window(app->mlx.ptr, app->mlx.win, app->mlx.img, 0, 0);
+	return (0);
+}
+
+int	loop_hook(t_app *app)
+{
+	int	end;
+
+	if (app->needs_render)
+	{
+		app->needs_render = 0;
+		app->row = 0;
+	}
+	if (app->row >= HEIGHT)
+		return (0);
+	end = app->row + SLICE_ROWS;
+	if (end > HEIGHT)
+		end = HEIGHT;
+	render_span(app, app->row, end);
+	app->row = end;
+	if (app->row >= HEIGHT)
+		present_frame(app);
 	return (0);
 }

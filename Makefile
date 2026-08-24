@@ -2,7 +2,7 @@ NAME        = miniRT
 BONUS_NAME  = miniRT_bonus
 
 CC          = cc
-CFLAGS      = -Wall -Wextra -Werror -ggdb
+CFLAGS      = -Wall -Wextra -Werror -O2 -ggdb
 
 GREEN       = \033[0;32m
 YELLOW      = \033[0;33m
@@ -37,6 +37,7 @@ COMMON_SRCS = srcs/main.c \
               srcs/window/mlx_utils.c \
               srcs/render/camera.c \
               srcs/render/render.c \
+              srcs/render/preview.c \
               srcs/render/translation.c \
               srcs/intersect/intersect.c \
               srcs/intersect/sphere.c \
