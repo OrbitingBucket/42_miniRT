@@ -48,6 +48,9 @@
 		cam = { x: 0, y: 4.6, z: -9.8, yaw: 0, pitch: -0.35, fov: 58 };
 		SPEED = 4.0;
 	}
+	document.title = SCENE ? 'Wonderland' : 'Chess';
+	document.getElementById('title').textContent
+		= SCENE ? 'wonderland' : 'chess';
 	canvas.width = W;
 	canvas.height = H;
 	ctx = canvas.getContext('2d');
