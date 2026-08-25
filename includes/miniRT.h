@@ -229,6 +229,13 @@ typedef struct s_hit
 	int				front_face;
 }					t_hit;
 
+typedef struct s_cleanup
+{
+	t_scene			*scene;
+	char			**tokens;
+	int				fd;
+}					t_cleanup;
+
 t_vec3				vec3(double x, double y, double z);
 t_vec3				vec3_add(t_vec3 a, t_vec3 b);
 t_vec3				vec3_sub(t_vec3 a, t_vec3 b);
@@ -276,6 +283,8 @@ void				free_tokens(char **tokens);
 int					token_count(char **tokens);
 void				error_exit(const char *msg);
 void				free_scene(t_scene *scene);
+t_cleanup			*cleanup_slot(void);
+void				cleanup_all(void);
 
 void				mlx_setup(t_app *app);
 void				mlx_put_pixel(t_mlx *mlx, int x, int y, t_color color);

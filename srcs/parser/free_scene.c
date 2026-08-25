@@ -34,3 +34,26 @@ void	free_scene(t_scene *scene)
 		light = next_light;
 	}
 }
+
+t_cleanup	*cleanup_slot(void)
+{
+	static t_cleanup	slot;
+
+	return (&slot);
+}
+
+void	cleanup_all(void)
+{
+	t_cleanup	*cl;
+
+	cl = cleanup_slot();
+	if (cl->tokens)
+		free_tokens(cl->tokens);
+	cl->tokens = NULL;
+	if (cl->scene)
+		free_scene(cl->scene);
+	cl->scene = NULL;
+	if (cl->fd > 2)
+		close(cl->fd);
+	cl->fd = 0;
+}

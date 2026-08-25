@@ -23,6 +23,9 @@ void	parse_light(char **tokens, t_scene *scene)
 	light = malloc(sizeof(t_light));
 	if (!light)
 		error_exit("malloc failed");
+	light->next = NULL;
+	scene->lights = light;
+	scene->has_light = 1;
 	light->pos = parse_vec3(tokens[1]);
 	light->brightness = parse_double(tokens[2]);
 	if (light->brightness < 0.0 || light->brightness > 1.0)
@@ -31,7 +34,4 @@ void	parse_light(char **tokens, t_scene *scene)
 	light->kc = 1.0;
 	light->kl = 0.0;
 	light->kq = 0.0;
-	light->next = NULL;
-	scene->lights = light;
-	scene->has_light = 1;
 }
