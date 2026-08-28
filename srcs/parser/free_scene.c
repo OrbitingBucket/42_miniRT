@@ -23,6 +23,7 @@ void	free_scene(t_scene *scene)
 	while (obj)
 	{
 		next_obj = obj->next;
+		free(obj->mat.bump);
 		free(obj);
 		obj = next_obj;
 	}

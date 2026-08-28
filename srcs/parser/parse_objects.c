@@ -20,6 +20,7 @@ t_object	*new_object(t_obj_type type)
 	if (!obj)
 		error_exit("malloc failed");
 	obj->type = type;
+	obj->mat = default_material((t_color){0, 0, 0});
 	obj->next = NULL;
 	return (obj);
 }

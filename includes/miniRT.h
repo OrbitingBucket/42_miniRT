@@ -98,6 +98,9 @@ typedef struct s_material
 	double			roughness;
 	int				checkerboard;
 	double			checker_size;
+	unsigned char	*bump;
+	int				bump_w;
+	int				bump_h;
 }					t_material;
 
 typedef struct s_sphere
