@@ -17,6 +17,7 @@ static void	unknown_id(char *token)
 	ft_putstr_fd("Error\nunknown identifier: ", 2);
 	ft_putstr_fd(token, 2);
 	ft_putstr_fd("\n", 2);
+	cleanup_all();
 	exit(1);
 }
 

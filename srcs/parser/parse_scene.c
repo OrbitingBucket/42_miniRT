@@ -12,11 +12,10 @@
 
 #include "miniRT.h"
 
-static void	bump_total(long *total)
+static void	die_line(char *line, const char *msg)
 {
-	*total += 1;
-	if (*total > 1048576)
-		error_exit("scene file too large");
+	free(line);
+	error_exit(msg);
 }
 
 static char	*read_line(int fd, long *total)
@@ -34,10 +33,11 @@ static char	*read_line(int fd, long *total)
 	{
 		ret = read(fd, &c, 1);
 		if (ret < 0)
-			error_exit("read error");
+			die_line(line, "read error");
 		if (ret == 0 || c == '\n')
 			break ;
-		bump_total(total);
+		if (++(*total) > 1048576)
+			die_line(line, "scene file too large");
 		line[i++] = c;
 	}
 	line[i] = '\0';
@@ -73,9 +73,11 @@ static void	read_all(int fd, t_scene *scene)
 			break ;
 		tokens = split_line(line);
 		free(line);
+		cleanup_slot()->tokens = tokens;
 		if (tokens && tokens[0])
 			dispatch(tokens, scene);
 		free_tokens(tokens);
+		cleanup_slot()->tokens = NULL;
 	}
 }
 
@@ -89,8 +91,11 @@ void	parse_scene(const char *file, t_scene *scene)
 	if (fd < 0)
 		error_exit("cannot open scene file");
 	ft_memset(scene, 0, sizeof(t_scene));
+	cleanup_slot()->fd = fd;
+	cleanup_slot()->scene = scene;
 	read_all(fd, scene);
 	close(fd);
+	cleanup_slot()->fd = 0;
 	if (!scene->has_ambient || !scene->has_camera || !scene->has_light)
 		error_exit("scene missing mandatory element (A, C, or L)");
 }

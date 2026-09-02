@@ -32,6 +32,7 @@ int	main(int argc, char **argv)
 
 void	error_exit(const char *msg)
 {
+	cleanup_all();
 	ft_putstr_fd("Error\n", 2);
 	ft_putstr_fd((char *)msg, 2);
 	ft_putstr_fd("\n", 2);
