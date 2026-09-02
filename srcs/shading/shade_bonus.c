@@ -20,6 +20,7 @@ t_color	shade(t_hit *hit, t_scene *scene, t_ray ray)
 	t_material	tmp;
 
 	apply_checker(hit, &tmp);
+	apply_bump(hit);
 	final = ambient_light(hit, &scene->ambient);
 	light = scene->lights;
 	while (light)

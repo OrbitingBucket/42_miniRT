@@ -22,7 +22,7 @@ void	parse_material(char **tokens, int color_idx, t_material *mat)
 {
 	int	count;
 
-	count = token_count(tokens);
+	count = material_token_count(tokens, mat);
 	if (count > color_idx + 1)
 		mat->ks = parse_ratio(tokens[color_idx + 1]);
 	if (count > color_idx + 2)

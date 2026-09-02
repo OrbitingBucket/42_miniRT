@@ -27,5 +27,8 @@ t_material	default_material(t_color color)
 	m.roughness = 0.0;
 	m.checkerboard = 0;
 	m.checker_size = 1.0;
+	m.bump = NULL;
+	m.bump_w = 0;
+	m.bump_h = 0;
 	return (m);
 }
