@@ -81,7 +81,7 @@ void	render_span(t_app *app, int y_start, int y_end)
 	int				x;
 	int				y;
 
-	basis = build_camera_basis(&app->scene.camera);
+	basis = build_camera_basis(&app->render_camera);
 	step = 1 + app->fast;
 	y = y_start;
 	while (y < y_end && y < HEIGHT)

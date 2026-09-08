@@ -25,6 +25,7 @@
 # define MAX_DEPTH 8
 # define SHADOW_BIAS 1e-4
 # define SLICE_ROWS 32
+# define QUALITY_SLICE_ROWS 2
 # define MOVE_SPEED 1.0
 # define EDGE_SPREAD 0.1
 
@@ -208,10 +209,12 @@ typedef struct s_app
 {
 	t_mlx			mlx;
 	t_scene			scene;
+	t_camera		render_camera;
 	int				is_locked;
 	int				needs_render;
 	int				fast;
 	int				row;
+	int				preview_row;
 	t_color			*half;
 }					t_app;
 
@@ -292,7 +295,7 @@ void				cleanup_all(void);
 void				mlx_setup(t_app *app);
 void				mlx_put_pixel(t_mlx *mlx, int x, int y, t_color color);
 void				present_frame(t_app *app);
-void				upsample_frame(t_app *app);
+void				upsample_span(t_app *app, int y_start, int y_end);
 int					mouse_hook(int button, int x, int y, void *param);
 int					key_handler(int keycode, void *param);
 int					close_handler(t_app *app);

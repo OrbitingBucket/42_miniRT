@@ -37,6 +37,7 @@ COMMON_SRCS = srcs/main.c \
               srcs/window/mlx_utils.c \
               srcs/render/camera.c \
               srcs/render/render.c \
+              srcs/render/render_loop.c \
               srcs/render/preview.c \
               srcs/render/translation.c \
               srcs/intersect/intersect.c \

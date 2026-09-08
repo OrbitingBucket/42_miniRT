@@ -30,8 +30,6 @@ void	present_frame(t_app *app)
 	void	*tmp_img;
 	char	*tmp_addr;
 
-	if (app->fast)
-		upsample_frame(app);
 	mlx_put_image_to_window(app->mlx.ptr, app->mlx.win, app->mlx.back, 0, 0);
 	tmp_img = app->mlx.img;
 	tmp_addr = app->mlx.addr;

@@ -38,4 +38,5 @@ void	mlx_setup(t_app *app)
 	app->needs_render = 1;
 	app->fast = 1;
 	app->row = HEIGHT;
+	app->preview_row = HEIGHT;
 }

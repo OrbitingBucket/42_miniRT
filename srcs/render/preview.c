@@ -68,16 +68,16 @@ static t_color	sample_half(t_color *half, double sx, double sy)
 	return (color_lerp(top, bot, sy - j));
 }
 
-void	upsample_frame(t_app *app)
+void	upsample_span(t_app *app, int y_start, int y_end)
 {
 	t_camera_basis	basis;
 	t_color			color;
 	int				x;
 	int				y;
 
-	basis = build_camera_basis(&app->scene.camera);
-	y = -1;
-	while (++y < HEIGHT)
+	basis = build_camera_basis(&app->render_camera);
+	y = y_start - 1;
+	while (++y < y_end && y < HEIGHT)
 	{
 		x = -1;
 		while (++x < WIDTH)
