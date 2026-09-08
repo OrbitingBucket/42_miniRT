@@ -30,8 +30,20 @@ static double	spread4(double a, double b, double c, double d)
 	double	lo;
 	double	hi;
 
-	lo = fmin(fmin(a, b), fmin(c, d));
-	hi = fmax(fmax(a, b), fmax(c, d));
+	lo = a;
+	if (b < lo)
+		lo = b;
+	if (c < lo)
+		lo = c;
+	if (d < lo)
+		lo = d;
+	hi = a;
+	if (b > hi)
+		hi = b;
+	if (c > hi)
+		hi = c;
+	if (d > hi)
+		hi = d;
 	return (hi - lo);
 }
 

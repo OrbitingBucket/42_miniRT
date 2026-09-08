@@ -2,7 +2,7 @@ NAME        = miniRT
 BONUS_NAME  = miniRT_bonus
 
 CC          = cc
-CFLAGS      = -Wall -Wextra -Werror -O2 -ggdb
+CFLAGS      = -Wall -Wextra -Werror -O2 -ggdb -flto
 
 GREEN       = \033[0;32m
 YELLOW      = \033[0;33m
@@ -101,7 +101,7 @@ $(LIBFT):
 	@make -sC $(LIBFT_DIR)
 	@printf "$(GREEN)✓ Libft ready$(RESET)\n"
 
-%.o: %.c $(HEADERS)
+%.o: %.c $(HEADERS) Makefile
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
