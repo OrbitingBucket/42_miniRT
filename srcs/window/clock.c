@@ -11,20 +11,13 @@
 /* ************************************************************************** */
 
 #include "miniRT.h"
+#include <sys/time.h>
 
 double	now_seconds(void)
 {
-	char	buf[64];
-	int		fd;
-	int		len;
+	struct timeval	tv;
 
-	fd = open("/proc/uptime", O_RDONLY);
-	if (fd < 0)
+	if (gettimeofday(&tv, NULL) < 0)
 		return (-1.0);
-	len = read(fd, buf, sizeof(buf) - 1);
-	close(fd);
-	if (len <= 0)
-		return (-1.0);
-	buf[len] = '\0';
-	return (ft_strtod(buf, NULL));
+	return (tv.tv_sec + tv.tv_usec / 1e6);
 }
