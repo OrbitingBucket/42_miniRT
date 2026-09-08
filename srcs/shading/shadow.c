@@ -28,13 +28,20 @@ static t_ray	make_shadow_ray(t_hit *hit, t_light *light)
 
 int	in_shadow(t_scene *scene, t_hit *hit, t_light *light)
 {
-	t_ray	shadow_ray;
-	t_hit	tmp;
-	double	light_dist;
+	t_ray		shadow_ray;
+	t_hit		tmp;
+	t_object	*obj;
+	double		light_dist;
 
 	shadow_ray = make_shadow_ray(hit, light);
-	light_dist = vec3_len(vec3_sub(light->pos, hit->point));
-	if (intersect_scene(shadow_ray, scene, &tmp))
-		return (tmp.t < light_dist - SHADOW_BIAS);
+	light_dist = vec3_len(vec3_sub(light->pos, hit->point)) - SHADOW_BIAS;
+	obj = scene->objects;
+	while (obj)
+	{
+		tmp.t = light_dist;
+		if (hit_object(shadow_ray, obj, &tmp) && tmp.t < light_dist)
+			return (1);
+		obj = obj->next;
+	}
 	return (0);
 }

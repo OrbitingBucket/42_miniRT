@@ -2,7 +2,7 @@ NAME        = miniRT
 BONUS_NAME  = miniRT_bonus
 
 CC          = cc
-CFLAGS      = -Wall -Wextra -Werror -O2 -ggdb -flto
+CFLAGS      = -Wall -Wextra -Werror -O2 -ggdb
 
 GREEN       = \033[0;32m
 YELLOW      = \033[0;33m
