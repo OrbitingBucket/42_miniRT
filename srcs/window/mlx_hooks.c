@@ -57,7 +57,7 @@ int	key_handler(int keycode, void *param)
 	}
 	if (app->is_locked)
 		return (0);
-	handle_move(app, keycode);
+	press_move_key(app, keycode);
 	return (0);
 }
 

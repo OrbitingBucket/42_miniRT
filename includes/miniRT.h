@@ -26,7 +26,13 @@
 # define SHADOW_BIAS 1e-4
 # define SLICE_ROWS 32
 # define QUALITY_SLICE_ROWS 2
-# define MOVE_SPEED 1.0
+# define MOVE_SPEED 8.0
+# define MOTION_FALLBACK_DT 0.05
+# define MOTION_MAX_DT 0.25
+# define MOVE_BIT_W 1
+# define MOVE_BIT_A 2
+# define MOVE_BIT_S 4
+# define MOVE_BIT_D 8
 # define EDGE_SPREAD 0.1
 
 # ifdef __linux__
@@ -215,6 +221,9 @@ typedef struct s_app
 	int				fast;
 	int				row;
 	int				preview_row;
+	int				keys;
+	int				pending;
+	double			move_clock;
 	t_color			*half;
 }					t_app;
 
@@ -303,7 +312,11 @@ int					expose_handler(t_app *app);
 int					loop_hook(t_app *app);
 
 void				move_camera(int key, t_camera *cam, double speed);
-void				handle_move(t_app *app, int keycode);
+void				apply_motion(t_app *app, int frame_start);
+void				press_move_key(t_app *app, int keycode);
+int					key_release(int keycode, void *param);
+int					focus_out(void *param);
+double				now_seconds(void);
 t_camera_basis		build_camera_basis(t_camera *cam);
 t_ray				get_ray(t_camera_basis *basis, double u, double v);
 t_color				ray_color(t_ray ray, t_scene *scene, int depth);

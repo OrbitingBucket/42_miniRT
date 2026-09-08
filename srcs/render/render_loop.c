@@ -51,7 +51,11 @@ static void	preview_slice(t_app *app)
 
 int	loop_hook(t_app *app)
 {
-	if (app->needs_render && (!app->fast || app->preview_row >= HEIGHT))
+	int	frame_start;
+
+	frame_start = (!app->fast || app->preview_row >= HEIGHT);
+	apply_motion(app, frame_start);
+	if (app->needs_render && frame_start)
 		start_frame(app);
 	if (app->row < HEIGHT)
 		render_slice(app);

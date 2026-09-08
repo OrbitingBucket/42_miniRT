@@ -38,10 +38,59 @@ void	move_camera(int key, t_camera *cam, double speed)
 		cam->pos = vec3_sub(cam->pos, vec3_scale(right, speed));
 }
 
-void	handle_move(t_app *app, int keycode)
+static double	motion_dt(t_app *app, int frame_start)
 {
-	if (keycode != 119 && keycode != 115 && keycode != 100 && keycode != 97)
+	double	now;
+	double	dt;
+
+	now = now_seconds();
+	if (now < 0.0)
+	{
+		if (frame_start)
+			return (MOTION_FALLBACK_DT);
+		return (0.0);
+	}
+	dt = now - app->move_clock;
+	app->move_clock = now;
+	if (dt < 0.0)
+		return (0.0);
+	if (dt > MOTION_MAX_DT)
+		return (MOTION_MAX_DT);
+	return (dt);
+}
+
+static void	move_held_keys(t_camera *cam, int keys, double dist)
+{
+	if (keys & MOVE_BIT_W)
+		move_camera(KEY_W, cam, dist);
+	if (keys & MOVE_BIT_A)
+		move_camera(KEY_A, cam, dist);
+	if (keys & MOVE_BIT_S)
+		move_camera(KEY_S, cam, dist);
+	if (keys & MOVE_BIT_D)
+		move_camera(KEY_D, cam, dist);
+}
+
+void	apply_motion(t_app *app, int frame_start)
+{
+	int		released;
+	double	dt;
+
+	released = app->pending;
+	app->pending = 0;
+	if (app->is_locked)
+	{
+		app->keys = 0;
 		return ;
-	move_camera(keycode, &app->scene.camera, MOVE_SPEED);
-	app->needs_render = 1;
+	}
+	if (app->keys)
+	{
+		dt = motion_dt(app, frame_start);
+		if (dt > 0.0)
+		{
+			move_held_keys(&app->scene.camera, app->keys, MOVE_SPEED * dt);
+			app->needs_render = 1;
+		}
+	}
+	app->keys &= ~released;
 }

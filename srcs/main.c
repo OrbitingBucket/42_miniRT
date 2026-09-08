@@ -22,6 +22,8 @@ int	main(int argc, char **argv)
 	mlx_setup(&app);
 	mlx_mouse_hook(app.mlx.win, mouse_hook, &app);
 	mlx_hook(app.mlx.win, 2, 1L << 0, (int (*)())(void *)key_handler, &app);
+	mlx_hook(app.mlx.win, 3, 1L << 1, (int (*)())(void *)key_release, &app);
+	mlx_hook(app.mlx.win, 10, 1L << 21, (int (*)())(void *)focus_out, &app);
 	mlx_hook(app.mlx.win, 17, 0, (int (*)())(void *)close_handler, &app);
 	mlx_hook(app.mlx.win, 12, 1L << 15, (int (*)())(void *)expose_handler,
 		&app);
